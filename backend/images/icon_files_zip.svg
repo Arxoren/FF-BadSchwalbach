@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_flows "http://ns.adobe.com/Flows/1.0/">
+]>
+<svg version="1.1"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+	 x="0px" y="0px" width="250px" height="250px" viewBox="7.558 5.132 250 250" enable-background="new 7.558 5.132 250 250"
+	 xml:space="preserve">
+<defs>
+</defs>
+<polygon fill="none" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10" points="57.058,67.736 57.058,240.382 
+	197.058,240.382 197.058,17.382 105.015,17.382 "/>
+<polygon fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
+	57.058,67.382 105.058,17.382 105.058,67.382 "/>
+<rect x="82.058" y="156.382" fill="#FFFFFF" width="91" height="8"/>
+<rect x="82.058" y="175.382" fill="#FFFFFF" width="91" height="9"/>
+<rect x="82.058" y="196.382" fill="#FFFFFF" width="51" height="8"/>
+<text transform="matrix(1 0 0 1 92.8076 137.1162)" fill="#FFFFFF" font-family="'DroidSans-Bold'" font-size="43.8">ZIP</text>
+</svg>
