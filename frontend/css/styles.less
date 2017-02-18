@@ -2641,6 +2641,42 @@ nav .meta, nav .cityselect { display: none; }
 
 }
 
+/*-----------] Video [----------------- */
+
+video {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+.responsive-video iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+}
+.responsive-video {
+	position: relative;
+	padding-bottom: 56.25%; /* Default for 1600x900 videos 16:9 ratio*/
+	padding-top: 0px;
+	height: 0;
+	overflow: hidden;
+
+	text-align: center;
+	background-color: @color_grey_dark;
+
+	p {
+		color: #FFF;
+		margin-top: 50px;
+	}
+	img {
+		margin-top: 50px;
+		border: 0;
+		width: 150px;
+	}
+}
 
 /*================================================================================================================= */
 /*-----------------] FOOTER [------------------ */
@@ -2761,6 +2797,7 @@ nav .meta, nav .cityselect { display: none; }
 	#footer .meta p { width: 100%; text-align: center; font-size: 14px; clear: both; }
 	
 }
+
 
 
 

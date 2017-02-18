@@ -341,7 +341,7 @@ class model_media extends CI_Model {
 		$folder="./frontend/".$mediatype."_cms/".$path."";
 		$filemap['main'] = directory_map($folder, 1);
 		$folder_list = array();
-		
+
 		for($i=0; $i<count($filemap['main']); $i++) {
 			if(is_dir("./frontend/".$mediatype."_cms/".$path."/".$filemap['main'][$i])) {
 				
@@ -352,6 +352,8 @@ class model_media extends CI_Model {
 
 		// --- Ordner liste abrufen
 		$var['folder'] = $folder_list;
+		print_r($var);
+
 		return $var;
 	}
 

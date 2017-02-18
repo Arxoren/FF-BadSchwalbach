@@ -24,7 +24,7 @@
 
 <div id="admin_login_panel">
     <div id="admin_login_logo"><img src="<?php echo base_url(); ?>/backend/images/easyclick_logo.png" /></div>
-    <div id="admin_login_site"><a href="http://<?php echo base_url(); ?>" target="_blank">feuerwehr-badschwalbach.de</a></div>
+    <div id="admin_login_site"><a href="<?php echo base_url(); ?>" target="_blank">feuerwehr-badschwalbach.de</a></div>
     
     <form action="<?php echo base_url(); ?>admin" method="post">
     <input type="hidden" name="op" value="login" />

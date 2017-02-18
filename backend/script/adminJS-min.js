@@ -3,13 +3,13 @@
 	var new_module = 0;
 	var icon_object = '';
 	
-	/*
+	
 	var g_basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/admin/'
 	var basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/'
-	*/
+	/*
 	var g_basepath = 'http://www.feuerwehr-badschwalbach.de/admin/'
 	var basepath = 'http://www.feuerwehr-badschwalbach.de/'
-	
+	*/
 
 	$(document).ready(function() {
 
@@ -225,11 +225,31 @@
 	//  wich drawer: data-drawer="js_admin_opendrawer"
 	/*--------------------------------------------------------------*/
 	
-	$('.js_admin_opendrawer').click(function() {
-		
+	$('.js_admin_opendrawer').click(function(e) {
+		e.preventDefault();
 		var drawerID = $(this).attr("data-drawer");
 
 		if($(this).is(':checked')) {
+			$('.js_admin_opendrawer_'+drawerID).removeClass('admin_hide');
+		} else {
+			$('.js_admin_opendrawer_'+drawerID).addClass('admin_hide');
+		}
+
+	});
+
+	$(document).on("click", ".js_admin_tabbar", function(e) {
+		e.preventDefault();
+		var drawerID = $(this).attr("data-drawer");
+		
+		$('.tabbar').children().each(function(){
+			$(this).children().removeClass('active');
+		});
+		$('.js_admin_tabbarcontent').children().each(function(){
+			$(this).addClass('admin_hide');
+		});
+
+		$(this).addClass('active');
+		if($('.js_admin_opendrawer_'+drawerID).hasClass('admin_hide')) {
 			$('.js_admin_opendrawer_'+drawerID).removeClass('admin_hide');
 		} else {
 			$('.js_admin_opendrawer_'+drawerID).addClass('admin_hide');
@@ -820,6 +840,30 @@
 		e.preventDefault();
 		close_module_editlightbox();
 		$( icon_object ).next('img').remove();
+	});
+
+
+	$(document).on("click", "#js_admin_moduleedit_video_update", function(e) {
+		e.preventDefault();
+
+		i = 1;
+		var modulID = $(this).attr('data-moduleID');
+		
+		$('.js_admin_tabbarcontent').children().each(function(e) { 
+			if(!$(this).hasClass('admin_hide')) {
+				type = $(this).attr('data-type');
+				linkname = $('[name="link_'+i+'"]').val();
+			}
+			i++;
+		});
+
+		link = linkname.split("/");
+		value = '[video::'+type+'::'+link[link.length-1]+']';
+		html = '<div class="responsive-video"><img src="'+basepath+'backend/images/contentmodule/icon_module_video.svg" /><p>Speichern Sie die Seite, um die Videovorschau zu sehen:<br/>Type: <strong>'+type+'</strong><br/>URL: <strong>'+linkname+'</strong></p></div>';
+		
+		$('[name="content_'+modulID+'"]').val(value);
+		$('.js_adminlayoutmodul_'+modulID+' > div.row > div.responsive-video').replaceWith(html);
+		close_module_editlightbox();
 	});
 
 

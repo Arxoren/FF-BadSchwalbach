@@ -327,7 +327,19 @@ class pagebuilder extends CI_Controller {
 			$mdata['filelist'] = $this->Model_media->media_get_folderstructure($module['attachment'], 'gallerie');
 			$mdata['imagelist'] = $this->Model_media->media_get_images($_GET["path"]);
 		}
-		
+		if($module['attachment']=="files") {	
+			if($mdata['model_func']=='video') {
+				$path = 'video';
+			} else {
+				$path = $mdata['name'];
+			}
+			$_GET["path"] = $path;
+			$_GET["type"] = $module['attachment'];
+
+			$this->load->model('admin/Model_media');
+			$mdata['filelist'] = $this->Model_media->media_get_files($_GET["path"]);
+		}
+
 		$this->load->model('site/model_'.$module["model"].'');
 		$getmodel = "model_".$module["model"];
 		$getmethode = "get_".$module["function"];

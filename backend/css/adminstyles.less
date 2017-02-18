@@ -226,6 +226,30 @@ a:hover {
 			width: 150px;
 		}
 	}
+	ul.tabbar {
+		list-style: none;
+		margin: 25px 0 25px 0;
+		padding: 15px 0;
+		text-align: left;
+		text-align: center;
+		border-bottom: 1px solid @color_darkgrey;
+		border-top: 1px solid @color_darkgrey;
+
+		li {
+			display: inline-block;
+			
+			a {
+				padding: 15px 15px;
+				text-decoration: none;
+				color: @color_darkgrey;
+				font-size: 18px;
+			}
+			a.active, a:hover {
+				background-color: @color_bluehover;
+				color: #FFF;
+			}
+		}
+	}
 }
 .admin_lightbox_close {
 	z-index: 999999999;

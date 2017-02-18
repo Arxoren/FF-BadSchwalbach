@@ -202,6 +202,10 @@ class model_adminnews extends CI_Model {
 					if($sontentmodule_data["model"]=="table") {
 						//$this->page_savetable($_POST["content_".$modulID], $modulID);
 					}
+					if($sontentmodule_data["model"]=="video") {
+						$sql = 'UPDATE ffwbs_news_modules SET module_data="'.$_POST["content_".$modulID].'" WHERE page_moduleID="'.$modulID.'"';
+						$this->db->simple_query($sql);									
+					}
 				}
 
 			} else {
