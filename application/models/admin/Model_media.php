@@ -187,19 +187,21 @@ class model_media extends CI_Model {
 				}
 
 			} elseif($_POST["media_type"] == "file") {
-				if($_FILES['media_file']['type'][$i] == "text/plain" || $_FILES['media_file']['type'][$i] == "application/msexcel" || $_FILES['media_file']['type'][$i] == "application/mspowerpoint" || $_FILES['media_file']['type'][$i] == "application/pdf" || $_FILES['media_file']['type'][$i] == "application/zip" || $_FILES['media_file']['type'][$i] == "application/msword") {
+				if($_FILES['media_file']['type'][$i] == "image/jpeg" || $_FILES['media_file']['type'][$i] == "video/webm" || $_FILES['media_file']['type'][$i] == "video/mp4" || $_FILES['media_file']['type'][$i] == "text/plain" || $_FILES['media_file']['type'][$i] == "application/msexcel" || $_FILES['media_file']['type'][$i] == "application/mspowerpoint" || $_FILES['media_file']['type'][$i] == "application/pdf" || $_FILES['media_file']['type'][$i] == "application/zip" || $_FILES['media_file']['type'][$i] == "application/msword") {
 				    $uploadOk = 1;
 				} else {
 				    $error = 'error:Sorry, Diese Datei ist nicht erlaubt.';
 				    $uploadOk = 0;				
 				}
 				//--- Doppelter Name checken
+				/*
 				if (file_exists($filedir.$_FILES["media_file"]["name"][$i])) {
 				    $msg = 'error:Sorry, Eine Datei mit dem Namen "'.$_FILES["media_file"]["name"][$i].'" existiert bereits und kann nicht überschrieben werden.';
 				    $uploadOk = 0;
 				}
+				*/
 				//--- Dateigröße begrenzen
-				if ($_FILES["media_file"]["size"][$i] > 8000000) {
+				if ($_FILES["media_file"]["size"][$i] > 80000000) {
 				    $msg = 'error:Sorry, Die Datei "'.$_FILES["media_file"]["name"][$i].'" ist zu groß.';
 				    $uploadOk = 0;
 				}

@@ -3,13 +3,13 @@
 	var new_module = 0;
 	var icon_object = '';
 	
-	
+	/*
 	var g_basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/admin/'
 	var basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/'
-	/*
+	*/
 	var g_basepath = 'http://www.feuerwehr-badschwalbach.de/admin/'
 	var basepath = 'http://www.feuerwehr-badschwalbach.de/'
-	*/
+	
 
 	$(document).ready(function() {
 
@@ -146,6 +146,10 @@
 
 	$('#js_admin_savefile').click(function() {
 		
+		html = '<div><p>Upload läuft. Bitte warten ...</p><div class="admin_showbox"><div class="admin_loader"><svg class="admin_circular" viewBox="25 25 50 50"><circle class="admin_path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/></svg></div></div></div>'
+		$('.js_adminimageupload_box').addClass('admin_hide');
+		$(html).insertAfter('.admin_uploadbutton');
+		$('#js_admin_savefile').addClass('admin_hide');
 		$( "#js_admin_fileuploadform" ).submit();
 
 	});

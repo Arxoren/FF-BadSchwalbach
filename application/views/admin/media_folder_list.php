@@ -117,6 +117,9 @@
 				foreach($content['files'] as $folder) {
 					
 					switch($folder['format']) {	
+						case "jpg": $file_icon = 'icon_images.svg'; break;
+						case "mp4": $file_icon = 'icon_video.svg'; break;
+						case "webm": $file_icon = 'icon_video.svg'; break;
 						case "pdf": $file_icon = 'icon_files_pdf.svg'; break;
 						case "txt": $file_icon = 'icon_files_txt.svg'; break;
 						case "zip": $file_icon = 'icon_files_zip.svg'; break;
@@ -222,7 +225,6 @@
 						<input type="hidden" name="folder" id="js_admin_uploadtarget" value="<?php echo $content["path"].'/'.lcfirst($content["headline"]); ?>" />
 
 						<div class="js_adminimageupload_box">
-							
 							<div class="admin_uploadcontainer admin_uploadcontainer_1">
 								<p><input type="file" name="media_file[]" class="" data-uploadnumber="1" /></p>
 								<p>&nbsp;</p>
@@ -236,9 +238,6 @@
 									<input type="text" name="description" />
 								</p>
 							</div>
-					        <div class="admin_image_upload">
-					            <input type="button" value="weiteres Bild mit hochladen" id="js_admin_moremediaupload" />
-					        </div>
 						</div>
 
 						<div class="admin_uploadbutton">
