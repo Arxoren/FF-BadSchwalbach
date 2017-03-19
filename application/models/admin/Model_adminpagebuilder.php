@@ -76,7 +76,6 @@ class model_adminpagebuilder extends CI_Model {
 	*/
 	public function get_page() {
 
-
 			$query = $this->db->query('SELECT * FROM ffwbs_admin_function WHERE var="'.$_GET["op"].'" LIMIT 1');
 			
 	       	if ($this->db->affected_rows()!=0) {	

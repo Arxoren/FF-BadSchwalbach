@@ -31,7 +31,7 @@
                 <select name="wehr">
 					<?php
                     if($news_details['wehrID']==0) { $select=' selected'; } else { $select=''; }
-                    echo'<option'.$select.'>Allgemein</option>';
+                    echo'<option value="0"'.$select.'>Allgemein</option>';
 
                     foreach($news_details['wehren'] as $wehr) { 
                         if($wehr['wehrID']==$news_details['wehrID']) { $select=' selected'; } else { $select=''; }

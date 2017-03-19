@@ -18,6 +18,9 @@ if(!isset($_GET["op"])) {
 		if($pagemoduleID=="video") {
 		    echo'<div class="admin_layoutmodul_panel_edit admin_hide" data-moduletype="'.$_GET["op"].'" data-contentmoduleid="'.$contentmoduleID.'" data-moduleid="'.$moduleID.'"></div>';
 		}
+		if($pagemoduleID=="files") {
+		    echo'<div class="admin_layoutmodul_panel_edit admin_hide" data-moduletype="'.$_GET["op"].'" data-contentmoduleid="'.$contentmoduleID.'" data-moduleid="'.$moduleID.'"></div>';
+		}	
 	?>
     <input type="hidden" name="content_<?php echo $moduleID; ?>" value="<?php echo $module_data; ?>" />
     <input type="hidden" name="name_<?php echo $moduleID; ?>" value="<?php echo $module_name; ?>" />

@@ -211,7 +211,7 @@ class model_pageeditor extends CI_Model {
 						$this->db->simple_query($sql);									
 					}
 					if($sontentmodule_data["model"]=="table") {
-						$this->page_savetable($_POST["content_".$modulID], $modulID);
+						$this->page_savetable($_POST["content_".$modulID], $modulID, 'page_modules');
 					}
 					if($sontentmodule_data["model"]=="video") {
 						$sql = 'UPDATE ffwbs_page_modules SET module_data="'.$_POST["content_".$modulID].'" WHERE page_moduleID="'.$modulID.'"';
@@ -250,7 +250,7 @@ class model_pageeditor extends CI_Model {
 					$this->db->insert('page_modules', $data_new_module);
 					$newest_tabeID = $this->db->insert_id();
 					
-					$this->page_savetable($_POST["content_".$modulID], $newest_tabeID);
+					$this->page_savetable($_POST["content_".$modulID], $newest_tabeID, 'page_modules');
 				}
 				
 				$i++;
@@ -265,50 +265,80 @@ class model_pageeditor extends CI_Model {
 
 	}
 
-	function page_savetable($content, $moduleID) {
+	function page_savetable($content, $moduleID, $type) {
+		
 		$content_array = explode("|", $content);
+		$table_value = "";
 
-		$query = $this->db->query('SELECT * FROM ffwbs_tables WHERE moduleID="'.$moduleID.'" ORDER BY SORT ASC');
-		$dbcelldata = $query->result_array();
-		$dbcellcount = $query->num_rows();	
-		$x=0;
+		if($type=='page_modules') {
+			$query = $this->db->query('SELECT * FROM ffwbs_page_modules WHERE page_moduleID="'.$moduleID.'"');
+		} else {
+			$query = $this->db->query('SELECT * FROM ffwbs_news_modules WHERE page_moduleID="'.$moduleID.'"');
+		}
+		$dbcelldata = $query->row_array();
+		$oldcellid = explode(",", $dbcelldata['module_data']);
 
 		foreach($content_array as $content) {
-				
+			
+
+			// ---------------------------------------------------
+			// | [0] => tableID
+			// | [1] => Label
+			// | [2] => Value
+			// | [3] => icon (optional)
+			// ---------------------------------------------------
+			
 			$content_data = explode("::", $content);
 
-			if(count($content_data)==3) {
-				$icon = $content_data[2];
+			if(count($content_data)==4) {
+				$icon = $content_data[3];
 			} else {
 				$icon = "";
 			}
 
-			if($x<$dbcellcount) {
-				$data_cellupdate = array(
-				   'label' => ''.$content_data[0].'' ,
-				   'value' => ''.$content_data[1].'',
-				   'icon' => ''.$icon.''
-				);
-				$this->db->where('tableID', $dbcelldata[$x]['tableID']);
+			$data_cellupdate = array(
+			   'label' => ''.$content_data[1].'' ,
+			   'value' => ''.$content_data[2].'',
+			   'icon' => ''.$icon.''
+			);
+			
+			if($content_data[0]!="") {
+				$this->db->where('tableID', $content_data[0]);
 				$this->db->update('tables', $data_cellupdate);
 			} else {
-				$data_cellupdate = array(
-				   'moduleID' => ''.$moduleID.'' ,
-				   'sort' => ''.$x.'' ,
-				   'label' => ''.$content_data[0].'' ,
-				   'value' => ''.$content_data[1].'' ,
-				   'icon' => ''.$icon.''
-				);
 				$this->db->insert('tables', $data_cellupdate);
+				$content_data[0] = $this->db->insert_id();
 			}
+
+			if($table_value=="") {	
+				$table_value = $content_data[0];
+			} else {
+				$table_value = $table_value.",".$content_data[0];
+			}
+
 			//print_r($data_cellupdate);
 			//echo'<br>';
-			$x++;
+
+			if(array_search($content_data[0], $oldcellid)>=0) {
+				$index = array_search($content_data[0], $oldcellid);
+				unset($oldcellid[$index]);
+			}
+			
+			
 		}	
 
-		if($dbcellcount > count($content_array) ) {
-			$query = $this->db->query('DELETE FROM ffwbs_tables WHERE moduleID="'.$moduleID.'" AND sort>="'.(count($content_array)).'"');
+		$moduledata = array(
+		   'module_data' => ''.$table_value.''
+		);
+		$this->db->where('page_moduleID', $moduleID);
+		$this->db->update($type, $moduledata);
+
+		if(count($oldcellid)>0) {
+			foreach($oldcellid as $cellid) {
+				$query = $this->db->query('DELETE FROM ffwbs_tables WHERE tableID="'.$cellid.'"');
+			}
 		}
+			
 	}
 
 	/*

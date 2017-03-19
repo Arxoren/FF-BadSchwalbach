@@ -3,18 +3,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     if(!isset($table)) {
         $table[0] = array(
+            'tableID' => "",
             'label' => "Label",
             'icon' => "",
             'value' => "Wert",
         );
     }
+
 ?>
 
 <div class="row raster-4col datafacts"> 
     
-    <?php for($i=0; $i<count($table); $i++) { ?>
-        <div class="col-1 cell">
-            <?php 
+    <?php for($i=0; $i<count($table); $i++) {
+        
+        if($GLOBALS['editable_tag']!="") {
+            $cellid = 'data-cell="'.$table[$i]['tableID'].'"';
+        } else {
+            $cellid = '';
+        }
+
+        echo '<div class="col-1 cell"'.$cellid.'>';
 			$color_class="";
 			if($GLOBALS['editable_tag']!="") {	
 				echo'<div class="admin_table_delete admin_hide"></div>';

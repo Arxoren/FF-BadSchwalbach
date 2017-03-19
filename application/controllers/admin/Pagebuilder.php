@@ -96,7 +96,7 @@ class pagebuilder extends CI_Controller {
 		if(isset($_SESSION["userID"]) && $_GET["op"]!="logout" && $_GET["op"]!="confirmation" && $_GET["op"]!="resetpassword_form"  && $_GET["op"]!="resetpassword") {
 			
 			if($data['actual_func']!="404") {
-
+				
 				if($data['actual_func']['view']=="") {
 					
 					// Model laden und ausführen
@@ -108,7 +108,7 @@ class pagebuilder extends CI_Controller {
 					$_GET['op']=$_GET['target'];
 					$data['actual_func'] = $this->model_adminpagebuilder->get_page();
 				}
-			
+
 				// ----- Page Building ----- //
 				// Document-Head
 				$this->load->view('admin/meta/documenthead', $data);
@@ -210,7 +210,7 @@ class pagebuilder extends CI_Controller {
 					$getmethode = "get_".$data_quellen[$i];
 					
 					if($module["model_type"] == "table") {
-						$data[$data_quellen[$i]] = $this->$getmodel->$getmethode($module["page_moduleID"]);
+						$data[$data_quellen[$i]] = $this->$getmodel->$getmethode($module["module_data"]);
 					} else {
 						$data[$data_quellen[$i]] = $this->$getmodel->$getmethode($module["module_data"]);
 					}

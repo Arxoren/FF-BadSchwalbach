@@ -354,7 +354,6 @@ class model_media extends CI_Model {
 
 		// --- Ordner liste abrufen
 		$var['folder'] = $folder_list;
-		print_r($var);
 
 		return $var;
 	}

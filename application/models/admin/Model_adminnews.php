@@ -127,7 +127,8 @@ class model_adminnews extends CI_Model {
 		$data_metadata = array(
 		   'headline' => ''.strip_editor_tags($_POST["news_headline"]).'',
 		   'text' => ''.strip_editor_tags($_POST["news_shorttext"]).'',
-		   'date' => ''.$_POST["news_datetime"].''
+		   'date' => ''.$_POST["news_datetime"].'',
+		   'wehrID' => ''.$_POST["news_wehrID"].''
 		);
 		$this->db->where('newsID', $_POST["newsID"]);
 		$this->db->update('news', $data_metadata);
@@ -144,13 +145,6 @@ class model_adminnews extends CI_Model {
 		
 		foreach($modules_delete as $delete_id) {
 			if(substr($delete_id, 0, 1)!=0) {
-				/*
-				$query = $this->db->query('SELECT * FROM ffwbs_page_modules WHERE page_moduleID="'.$delete_id.'"');
-				$tablecheck = $query->row_array();
-				if($tablecheck['layout']=="table") {
-					$query = $this->db->query('DELETE FROM ffwbs_tables WHERE moduleID="'.$delete_id.'"');
-				}
-				*/
 				$this->news_module_delete($delete_id);
 			}
 		}
@@ -200,7 +194,9 @@ class model_adminnews extends CI_Model {
 						$this->db->simple_query($sql);									
 					}
 					if($sontentmodule_data["model"]=="table") {
-						//$this->page_savetable($_POST["content_".$modulID], $modulID);
+						$CI =& get_instance();
+			        	$CI->load->model('admin/model_pageeditor');
+			       		$CI->model_pageeditor->page_savetable($_POST["content_".$modulID], $modulID, 'news_modules');
 					}
 					if($sontentmodule_data["model"]=="video") {
 						$sql = 'UPDATE ffwbs_news_modules SET module_data="'.$_POST["content_".$modulID].'" WHERE page_moduleID="'.$modulID.'"';
@@ -224,9 +220,8 @@ class model_adminnews extends CI_Model {
 					);
 					$this->db->insert('news_modules', $data_new_module);
 				} else {
-					/*
 					$data_new_module = array(
-					   'pageID' => ''.$_POST["pagesID"].'' ,
+					   'newsID' => ''.$_POST["newsID"].'' ,
 					   'contentmoduleID' => ''.$sontentmodule_data['contentmoduleID'].'' ,
 					   'model_type' => ''.$sontentmodule_data['model'].'' ,
 					   'model_func' => ''.$sontentmodule_data["function"].'' ,
@@ -237,11 +232,12 @@ class model_adminnews extends CI_Model {
 					   'sort' => ''.$i.'' ,
 					   'online' => '1'
 					);
-					$this->db->insert('page_modules', $data_new_module);
+					$this->db->insert('news_modules', $data_new_module);
 					$newest_tabeID = $this->db->insert_id();
 					
-					$this->page_savetable($_POST["content_".$modulID], $newest_tabeID);
-					*/
+					$CI =& get_instance();
+			        $CI->load->model('admin/model_pageeditor');
+			        $CI->model_pageeditor->page_savetable($_POST["content_".$modulID], $newest_tabeID, 'news_modules');
 				}
 				
 				$i++;
@@ -249,8 +245,8 @@ class model_adminnews extends CI_Model {
 
 		}
 
-		//$log_action = 'hat die News "'.$_POST["newsID"].' | '.$_POST["page_name"].'" bearbeitet.';
-		//basic_writelog($log_action,'pageeditor - module delete', 2);
+		$log_action = 'hat die News "'.$_POST["newsID"].' | '.$_POST["news_headline"].'" bearbeitet.';
+		basic_writelog($log_action,'pageeditor - module delete', 2);
 
 		$GLOBALS['globalmessage'] = "success:Änderungen wurden gespeichert";
 

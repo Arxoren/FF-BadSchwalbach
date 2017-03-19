@@ -97,7 +97,7 @@ class pagebuilder extends CI_Controller {
 								$getmethode = "get_".$data_quellen[$i];
 								
 								switch($row["model_type"]) {
-									case "table": $data[$data_quellen[$i]] = $this->$getmodel->$getmethode($row["page_moduleID"]); breaK;
+									case "table": $data[$data_quellen[$i]] = $this->$getmodel->$getmethode($row["module_data"]); breaK;
 									case "stage": $data[$data_quellen[$i]] = $this->$getmodel->$getmethode($row["page_moduleID"]); breaK;
 									default: $data[$data_quellen[$i]] = $this->$getmodel->$getmethode($row["module_data"]);
 								}
@@ -137,7 +137,7 @@ class pagebuilder extends CI_Controller {
 										$getmethode = "get_".$data_quellen[$i];
 										
 										switch($module["model_type"]) {
-											//case "table": $data[$data_quellen[$i]] = $this->$getmodel->$getmethode($module["page_moduleID"]); breaK;
+											case "table": $data[$data_quellen[$i]] = $this->$getmodel->$getmethode($module["module_data"]); breaK;
 											//case "stage": $data[$data_quellen[$i]] = $this->$getmodel->$getmethode($module["page_moduleID"]); breaK;
 											default: $data[$data_quellen[$i]] = $this->$getmodel->$getmethode($module["module_data"]);
 										}

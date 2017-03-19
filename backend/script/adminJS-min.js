@@ -3,12 +3,12 @@
 	var new_module = 0;
 	var icon_object = '';
 	
-	/*
 	var g_basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/admin/'
 	var basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/'
-	*/
+	/*
 	var g_basepath = 'http://www.feuerwehr-badschwalbach.de/admin/'
 	var basepath = 'http://www.feuerwehr-badschwalbach.de/'
+	*/
 	
 
 	$(document).ready(function() {
@@ -410,8 +410,8 @@
 			
 		   	if($(this).attr('data-module-id')) {
 
-		   		var modulID = $(this).attr('data-module-id')
-		   		var moduleType = $(this).attr('data-pagemodule-type')
+		   		var modulID = $(this).attr('data-module-id');
+		   		var moduleType = $(this).attr('data-pagemodule-type');
 
 		   		// "contenteditable" Elemente auslesen
 		   		// ------------------------------------------------------------------------------
@@ -424,6 +424,8 @@
 							contentdetail.push($(this).html());
 						});
 
+						//alert($(this).attr('data-pagemodule-type'));
+
 				    	$('[name="content_'+modulID+'"]').val(contentdetail.join("::"));  		
 			   		}
 			   	} else {
@@ -431,7 +433,9 @@
 
 			   		$(this).find('.cell').each(function() {
 				    	cellcontent = new Array();
-				    	
+
+						cellcontent.push($(this).attr('data-cell'));
+
 				    	$(this).find('[contenteditable="true"]').each(function(){
 							cellcontent.push($(this).html());
 						});	
