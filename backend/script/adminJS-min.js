@@ -3,6 +3,7 @@
 	var new_module = 0;
 	var icon_object = '';
 	
+	
 	var g_basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/admin/'
 	var basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/'
 	/*

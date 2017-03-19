@@ -9,7 +9,7 @@ class model_table extends CI_Model {
 			return $query->result_array();
 			*/
 			
-			$tabelID_array = explode(",", $module_data);
+			$tabelID_array = explode(":", $module_data);
 			$i = 0;
 
 			foreach($tabelID_array as $tableID) {

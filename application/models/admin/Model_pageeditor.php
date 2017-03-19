@@ -276,7 +276,7 @@ class model_pageeditor extends CI_Model {
 			$query = $this->db->query('SELECT * FROM ffwbs_news_modules WHERE page_moduleID="'.$moduleID.'"');
 		}
 		$dbcelldata = $query->row_array();
-		$oldcellid = explode(",", $dbcelldata['module_data']);
+		$oldcellid = explode(":", $dbcelldata['module_data']);
 
 		foreach($content_array as $content) {
 			
@@ -313,7 +313,7 @@ class model_pageeditor extends CI_Model {
 			if($table_value=="") {	
 				$table_value = $content_data[0];
 			} else {
-				$table_value = $table_value.",".$content_data[0];
+				$table_value = $table_value.":".$content_data[0];
 			}
 
 			//print_r($data_cellupdate);
@@ -374,6 +374,16 @@ class model_pageeditor extends CI_Model {
 		$pagemoduldata = $query->row_array();
 		$query = $this->db->query('SELECT * FROM ffwbs_pages WHERE pagesID="'.$pagemoduldata['pageID'].'"');
 		$pagedata = $query->row_array();
+
+		// Bei Tabellen-Module alle Zellen löschen
+		// --------------------------------------------------------------------
+		if($pagemoduldata['model_type']=="table") {
+			$cell_array = explode(":", $pagemoduldata['module_data']);
+			foreach($cell_array as $cell) {
+				$query = $this->db->query('DELETE FROM ffwbs_tables WHERE tableID="'.$cell.'"');
+			}
+		}
+		// --------------------------------------------------------------------
 
 		$query = $this->db->query('DELETE FROM ffwbs_page_modules WHERE page_moduleID="'.$delete_id.'"');
 	

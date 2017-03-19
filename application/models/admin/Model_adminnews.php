@@ -119,8 +119,6 @@ class model_adminnews extends CI_Model {
 	*/
 	public function news_save() {
 
-		//echo "<p style='color: #FFF;'>Reihe: ".$_POST["module_reihe"]."</p>";
-
 		$modul_array = explode(":", $_POST["module_reihe"]);
 
 		// --- META-Daten Speichern
@@ -258,6 +256,16 @@ class model_adminnews extends CI_Model {
 		$pagemoduldata = $query->row_array();
 		$query = $this->db->query('SELECT * FROM ffwbs_news WHERE newsID="'.$pagemoduldata['newsID'].'"');
 		$pagedata = $query->row_array();
+
+		// Bei Tabellen-Module alle Zellen löschen
+		// --------------------------------------------------------------------
+		if($pagemoduldata['model_type']=="table") {
+			$cell_array = explode(":", $pagemoduldata['module_data']);
+			foreach($cell_array as $cell) {
+				$query = $this->db->query('DELETE FROM ffwbs_tables WHERE tableID="'.$cell.'"');
+			}
+		}
+		// --------------------------------------------------------------------
 
 		$query = $this->db->query('DELETE FROM ffwbs_news_modules WHERE page_moduleID="'.$delete_id.'"');
 	
