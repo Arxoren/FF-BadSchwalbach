@@ -328,16 +328,26 @@ class pagebuilder extends CI_Controller {
 			$mdata['imagelist'] = $this->Model_media->media_get_images($_GET["path"]);
 		}
 		if($module['attachment']=="files") {	
+
 			if($mdata['model_func']=='video') {
 				$path = 'video';
 			} else {
-				$path = $mdata['name'];
+				if($mdata['name']!="") {	
+					$path = $mdata['name'];
+				} else {
+					$path = '';
+				}
 			}
 			$_GET["path"] = $path;
 			$_GET["type"] = $module['attachment'];
 
 			$this->load->model('admin/Model_media');
-			$mdata['filelist'] = $this->Model_media->media_get_files($_GET["path"]);
+			$mdata['filelist'] = $this->Model_media->media_get_folderstructure($module['attachment'], $path);
+
+			if($_GET["path"]=="") {
+				$_GET["path"] = $mdata['filelist']['folder'][0];
+			}
+			$mdata['files'] = $this->Model_media->media_get_files($_GET["path"]);
 		}
 
 		$this->load->model('site/model_'.$module["model"].'');
@@ -381,7 +391,7 @@ class pagebuilder extends CI_Controller {
 
 			$this->load->model('admin/Model_media');
 			$mdata['filelist'] = $this->Model_media->media_get_folderstructure($module['attachment'], 'gallerie');
-			$mdata['imagelist'] = $this->Model_media->media_get_images($_GET["path"]);
+			$mdata['files'] = $this->Model_media->media_get_images($_GET["path"]);
 		}
 		
 		$this->load->model('admin/model_'.$_POST["moduleID"].'');
@@ -410,7 +420,11 @@ class pagebuilder extends CI_Controller {
 		$_GET["type"] = $_POST["media_type"];
 		
 		$this->load->model('admin/Model_media');
-		$mdata['imagelist'] = $this->Model_media->media_get_images($_GET["path"]);
+		if($_GET["type"] == 'image') {
+			$mdata['imagelist'] = $this->Model_media->media_get_images($_GET["path"]);
+		} else {
+			$mdata['files'] = $this->Model_media->media_get_files($_GET["path"]);
+		}
 		
 		$response = $this->load->view('admin/m_folderlist', $mdata, TRUE);
 		

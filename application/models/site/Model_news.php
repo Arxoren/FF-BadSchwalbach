@@ -7,7 +7,7 @@ class model_news extends CI_Model {
 		if($GLOBALS['location']=="all") {
 			$sql = 'SELECT * FROM ffwbs_news WHERE online="1" ORDER BY date DESC';
 		} else {
-			$sql = 'SELECT * FROM ffwbs_news WHERE online="1" AND wehrID="'.$GLOBALS['location'].'" OR wehrID="0" ORDER BY date DESC';
+			$sql = 'SELECT * FROM ffwbs_news WHERE online="1" AND (wehrID="'.$GLOBALS['location'].'" OR wehrID="0") ORDER BY date DESC';
 		}
 		$query = $this->db->query($sql);
 		$news = $query->result_array();	
@@ -48,7 +48,7 @@ class model_news extends CI_Model {
 		if($GLOBALS['location']=="all") {
 			$query = $this->db->query('SELECT * FROM ffwbs_news WHERE online="1" ORDER BY date DESC LIMIT 9');
 		} else {
-			$query = $this->db->query('SELECT * FROM ffwbs_news WHERE online="1" AND wehrID="'.$GLOBALS['location'].'" OR wehrID="0" ORDER BY date DESC LIMIT 9');
+			$query = $this->db->query('SELECT * FROM ffwbs_news WHERE online="1" AND (wehrID="'.$GLOBALS['location'].'" OR wehrID="0") ORDER BY date DESC LIMIT 9');
 		}			
 
 		$news_array = $query->result_array();

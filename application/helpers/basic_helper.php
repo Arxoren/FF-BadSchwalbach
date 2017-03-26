@@ -149,6 +149,23 @@
        		return($var);
 		}
 
+		function basic_get_fileicon($format) {
+		    switch($format) { 
+                case "jpg": $file_icon = 'icon_images.svg'; break;
+                case "mp4": $file_icon = 'icon_video.svg'; break;
+                case "webm": $file_icon = 'icon_video.svg'; break;
+                case "pdf": $file_icon = 'icon_files_pdf.svg'; break;
+                case "txt": $file_icon = 'icon_files_txt.svg'; break;
+                case "zip": $file_icon = 'icon_files_zip.svg'; break;
+                case "doc": $file_icon = 'icon_files_doc.svg'; break;
+                case "docx": $file_icon = 'icon_files_doc.svg'; break;
+                case "ppt": $file_icon = 'icon_files_ppt.svg'; break;
+                case "pptx": $file_icon = 'icon_files_ppt.svg'; break;
+                default: $file_icon = 'icon_files_blank.svg'; break;
+            }
+            return $file_icon;
+        }
+
 		/*
 		|--------------------------------------------------------------------------
 		| Bread-Crump-Path Helper

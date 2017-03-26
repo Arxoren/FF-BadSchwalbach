@@ -321,12 +321,13 @@
 	});
 
 	/*--------------------------------------------------------------*/
-	//  IMAGE Upload AJAX
+	//  IMAGE & FILE Upload AJAX
 	/*--------------------------------------------------------------*/
 
 	$(document).on("submit", "#js_admin_saveimage_ajax", function(e) {
 		e.preventDefault();
 
+		var media_type = $('[name="media_type"]').val();
 		var formData = new FormData(this);
 		$.each($("input[type=file]"), function(i, obj) {
        		$.each(obj.files,function(j, file){
@@ -334,7 +335,8 @@
 		    })
 		});
 
-		
+		console.log(formData);
+
 		//--- Modul per AJAX laden
 		$.ajax({
 			type:'POST',
@@ -350,11 +352,18 @@
 
 				if(message[0]=="success") {
 					// Bild in die Liste einfügen
-					var i = $('#admin_moduledit_imggal').children().length;
-					$('#admin_moduledit_imggal').append('<li class="js_admin_moduleedit_imagedelete" id="slideshow_'+i+'" data-imgid="'+message[2]+'"><img src="'+basepath+'frontend/images_cms/'+message[5]+message[3]+'.'+message[4]+'" /></li>');
-					$('#admin_moduledit_imggal').sortable("refresh");
-				}
 
+					if(media_type == "image") {	
+						var i = $('#admin_moduledit_imggal').children().length;
+						$('#admin_moduledit_imggal').append('<li class="js_admin_moduleedit_imagedelete" id="slideshow_'+i+'" data-imgid="'+message[2]+'"><img src="'+basepath+'frontend/images_cms/'+message[5]+message[3]+'.'+message[4]+'" /></li>');
+					} else {
+						alert('Hallo: '+message);
+						$('#admin_moduledit_imggal').append('<li class="file" id="slideshow_'+i+'" data-fileid="'+message[2]+'" data-name="'+message[3]+'" data-format="'+message[6]+'" data-size"'+message[5]+'" data-icon=""><p><strong>'+message[3]+'</strong></p><p>'+message[6]+' - '+message[5]+'</p><hr class="clear" /></li>');
+					}
+
+					$('#admin_moduledit_imggal').sortable("refresh");	
+				}
+				console.log(message);
 				module_show_message(message, "");
             },
             error: function(formData){
@@ -703,6 +712,7 @@
 		$(this).remove();
 
 	});
+	
 	$(document).on("click", ".js_admin_moduleedit_addimage", function(e) {
 		e.preventDefault();
 
@@ -718,6 +728,7 @@
 		var message = msg.split(":");
 		module_show_message(message, ".admin_lightbox_subform2");
 	});
+
 	$(document).on("click", "#js_admin_moduleedit_imggal_update", function(e) {
 		e.preventDefault();
 
@@ -753,6 +764,54 @@
 		close_module_editlightbox();
 	});
 
+	$(document).on("click", ".js_admin_moduleedit_addfile", function(e) {
+		e.preventDefault();
+
+		var v_fileid = $(this).attr('data-fileid');
+		var v_name = $(this).attr('data-name');
+		var v_format = $(this).attr('data-format');
+		var v_size = $(this).attr('data-size');
+		var v_icon = $(this).attr('data-icon');
+		var i = $('#admin_moduledit_imggal').children().length;
+
+		alert("hallo: "+v_fileid);
+
+		$('#admin_moduledit_imggal').append('<li class="file js_admin_moduleedit_addfile" id="slideshow_'+i+'" data-fileid="'+v_fileid+'" data-name="'+v_name+'" data-format="'+v_format+'" data-size"'+v_size+'" data-icon="'+v_icon+'"><img src="'+v_icon+'" /><p><strong>'+v_name+'</strong></p><p>'+v_format+' - '+v_size+'</p><hr class="clear" /></li>');
+		$('#admin_moduledit_imggal').sortable("refresh");		
+
+		var msg = "success:Datei wurde der Liste hinzugefügt";
+		var message = msg.split(":");
+		module_show_message(message, ".admin_lightbox_subform2");
+	});
+	
+	$(document).on("click", "#js_admin_moduleedit_downloadfile_update", function(e) {
+		e.preventDefault();
+
+		var files ="";
+		var files_html ="";
+		var i = 1;
+		var modulID = $(this).attr('data-moduleID');
+
+		// --- UPDATEN
+		$('#admin_moduledit_imggal').children().each(function(){
+			
+   			files_html = files_html+'<li><a href="'+basepath+'frontend/files_cms/'+$(this).attr('data-name')+'" download><img src="'+basepath+'frontend/images/icons/icon_download.svg" /><p class="name">'+$(this).attr('data-name')+'</p><p class="desc">'+$(this).attr('data-format')+' Dokument / '+$(this).attr('data-size')+'</p></a></li>';
+	   		files = files+'[file::'+ $(this).attr('data-fileid')+']';
+	   		i++;
+
+	    });
+
+		$('[data-download-id="download_'+modulID+'"]').replaceWith('<ul data-download-id="download_'+modulID+'">'+files_html+'</ul>');
+		$('[name="content_'+modulID+'"]').val(files);
+		
+		close_module_editlightbox();
+	});
+	$(document).on("click", ".js_admin_moduleedit_filedelete", function(e) {
+		e.preventDefault();
+
+		$(this).parent().parent().remove();
+
+	});
 
 	//  Settings speichern
 	/*--------------------------------------------------------------*/

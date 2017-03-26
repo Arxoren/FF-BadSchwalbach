@@ -3,7 +3,7 @@
 <div id="admin_contentbox">
     <div class="admin_lightbox_mainform">
         <div class="admin_headrow">    
-            <h1>Bildgallerie bearbeiten</h1>
+            <h1>Download Dateien</h1>
             <a href="#" id="js_admin_moduleedit_opensubform2" class="admin_icon_button admin_icon_folder" data-moduleID="<?php echo $_POST['moduleID']; ?>">&nbsp;</a>
             <a href="#" id="js_admin_moduleedit_opensubform" class="admin_icon_button admin_icon_upload" data-moduleID="<?php echo $_POST['moduleID']; ?>">&nbsp;</a>
             <!--<a href="#" id="js_admin_modulesettings" class="admin_icon_button admin_icon_settings" data-moduleID="<?php //echo $_POST['moduleID']; ?>">&nbsp;</a> -->
@@ -11,42 +11,52 @@
         <div class="admin_scrollcontent">
             <ul id="admin_moduledit_imggal">
             <?php
-                
-                //print_r($imagegallery);
+                /*
+                $file_id_list = explode(':', $module_data);
+                foreach($file_id_list as $file) {
 
-                $i=0;
-                foreach($imagegallery as $img) {
-                    echo '<li class="js_admin_moduleedit_imagedelete" id="slideshow_'.$i.'" data-imgid="'.$img["imageID"].'">
-                        <img src="'.base_url().'frontend/images_cms/'.$img["folder"].$img["name"].'.'.$img["format"].'" />
+                }
+                */
+                $i = 0;
+                foreach($downloadfiles as $file) {
+                    
+
+
+                    echo '<li class="file" data-fileid="'.$file["fileID"].'" data-name="'.$file['filename'].'" data-format="'.$file['format'].'" data-size"'.$file['size'].'" data-icon="'.base_url().'backend/images/'.basic_get_fileicon($file['format']).'">
+                        <img src="'.base_url().'backend/images/'.basic_get_fileicon($file['format']).'" />
+                        <p><strong>'.$file['filename'].'</strong></p><p>'.$file['format'].' - '.$file['size'].'</p>
+                        <div class="editpanel">
+                            <a href="#" class="js_admin_moduleedit_filedelete">delete</a>
+                        </div>
+                        <hr class="clear" />
                     </li>';
                     $i++;
                 }
-
             ?>
             </ul>
         </div>
         <div class="admin_savebutton">
-            <a href="#" id="js_admin_moduleedit_imggal_update" class="admin_button" data-moduleID="<?php echo $_POST['moduleID']; ?>">Interface aktuallisieren</a>
+            <a href="#" id="js_admin_moduleedit_downloadfile_update" class="admin_button" data-moduleID="<?php echo $_POST['moduleID']; ?>">Interface aktuallisieren</a>
             <hr class="clear" />
         </div>
     </div>
     <div class="admin_lightbox_subform2 admin_hide">
         <div class="admin_headrow">    
-            <h1>Bild hinzufügen</h1>
+            <h1>Datei hinzufügen</h1>
             <a href="#" id="js_admin_moduleedit_closesubform" class="admin_icon_button admin_left admin_icon_back">&nbsp;</a>
         </div>
         <div class="admin_scrollcontent">
             <?php
                 echo'<form name="get_folderlist" id="js_admin_loadfolder_ajax" method="post" enctype="multipart/form-data">';
-                echo'<input type="hidden" name="media_type" value="image">';
+                echo'<input type="hidden" name="media_type" value="file">';
                 echo'<div class="admin_onerow_form"><p>
                     <label for="folder"><span class="helptext">Ordner</span></lable>
                     <select name="folder">';
 
                     foreach($filelist["folder"] as $file) {
-                        $folder='gallerie/'.$file;
+                        $folder='files_cms/'.$file;
                         if($folder==$_GET["path"]) { $check=' selected'; } else { $check=''; }
-                        echo'<option value="gallerie/'.$file.'"'.$check.'>gallerie/'.$file.'</option>';
+                        echo'<option value="'.$file.'"'.$check.'>files_cms/'.$file.'</option>';
                     }
 
                 echo'</select></p><p><input type="submit" value="Ordner laden" id="js_admin_loadfolder_ajax" /></p>
@@ -55,10 +65,12 @@
             <ul class="js_admin_editorfolderlist">
             <?php
                 $i=0;
-                foreach($imagelist as $img) {
-                    echo '<li class="js_admin_moduleedit_addimage" id="slideshow_'.$i.'" data-imgid="'.$img["imageID"].'" data-path="'.$img["folder"].$img["name"].'.'.$img["format"].'">
-                        <img src="'.base_url().'frontend/images_cms/'.$img["folder"].$img["name"].'.'.$img["format"].'" />
-                    </li>';
+                foreach($files as $file) {
+                    echo '<li class="file js_admin_moduleedit_addfile" data-fileid="'.$file["fileID"].'" data-name="'.$file['filename'].'" data-format="'.$file['format'].'" data-size"'.$file['size'].'" data-icon="'.base_url().'backend/images/'.basic_get_fileicon($file['format']).'">
+                        <img src="'.base_url().'backend/images/'.basic_get_fileicon($file['format']).'" />
+                        <p><strong>'.$file['filename'].'</strong></p><p>'.$file['format'].' - '.$file['size'].'</p>
+                        <hr class="clear" />
+                        </li>';
                     $i++;
                 }
             ?>
@@ -67,44 +79,45 @@
     </div>
     <div class="admin_lightbox_subform admin_hide">
         <div class="admin_headrow">    
-            <h1>Neues Bild hochladen</h1>
+            <h1>Neue Datei hochladen</h1>
             <a href="#" id="js_admin_moduleedit_closesubform" class="admin_icon_button admin_left admin_icon_back">&nbsp;</a>
         </div>
         <form name="imageupload" id="js_admin_saveimage_ajax" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="media_type" value="image">
-            <input type="hidden" name="folder" id="js_admin_uploadtarget" value="images_cms/gallerie/<?php echo $name; ?>" />
+                        
+            <input type="hidden" name="op" value="media_upload">
+            <input type="hidden" name="media_type" value="file">
+            <input type="hidden" name="target" value="media_folder_list">
 
             <div class="js_adminimageupload_box admin_image_upload">
                 <div class="admin_uploadcontainer admin_uploadcontainer_1">
-                    <?php
-                    /*
-                    echo'
                     <p>
                         <label for="folder2"><span class="helptext">Ordner</span></lable>
-                        <select name="folder2">';
-
-                            foreach($filelist["folder"] as $file) {
-                                echo'<option value="images_cms/gallerie/'.$file.'">'.$file.'</option>';
-                            }
-                        echo'
+                        <select name="folder" id="js_admin_uploadtarget">';
+                        <?php
+                        foreach($filelist["folder"] as $file) {
+                            $folder='files_cms/'.$file;
+                            if($folder==$_GET["path"]) { $check=' selected'; } else { $check=''; }
+                            echo'<option value="files_cms/'.$file.'"'.$check.'>files_cms/'.$file.'</option>';
+                        }
+                        ?>
                         </select>
-                    </p>';
-                    */
-                    ?>
-                    <p><input type="file" name="media_file" class="js_media_file_1 js_meda_choosefile" data-uploadnumber="1" /></p>
-                    <p class="imagePreview_container">
-                        <div class="admin_imagePreview" id="js_adminimage_preview_1" data-uploadnumber="1">
-                            <div class="admin_upload_advice"><strong>hier klicken</strong><br>um ein Bild hoch zu laden</div>
-                         </div>
                     </p>
+                    <p>&nbsp;</p>
+                    <p><input type="file" name="media_file[]" class="" data-uploadnumber="1" /></p>
+                    <p>&nbsp;</p>
                     <p>
-                        <label for="alt_text"><span class="helptext">ALT-Text</span></lable>
-                        <input type="text" name="alt_text" />
+                        <label for="displayname"><span class="helptext">Anzeige Name</span></lable>
+                        <input type="text" name="displayname" />
+                    </p>
+                    <p>&nbsp;</p>
+                    <p>
+                        <label for="description"><span class="helptext">Beschreibung</span></lable>
+                        <input type="text" name="description" />
                     </p>
                 </div>
             </div>
             <div class="admin_uploadbutton">
-                <input type="submit" value="Bild hochladen" id="js_admin_saveimage_ajax" />
+                <input type="submit" value="Bild hochladen" id="js_admin_savefile_ajax" />
             </div>
         </form>
     </div>

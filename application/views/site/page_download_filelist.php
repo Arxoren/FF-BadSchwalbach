@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
        	<div class="row"> 
            	<div class="col-4 download">
-				<ul>
+                <ul data-download-id="download_<?php echo $moduleID; ?>">
                 <?php
                     foreach($downloadfiles as $file) {
                         echo'

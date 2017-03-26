@@ -201,7 +201,7 @@ class model_pageeditor extends CI_Model {
 			
 			if(substr($modulID, 0, 1)!=0) {
 
-				if($sontentmodule_data["model"]=="editorial") {
+				if($sontentmodule_data["model"]=="editorial" || $sontentmodule_data["model"]=="files") {
 					$sql = 'UPDATE ffwbs_page_modules SET module_data="'.$content_string.'" WHERE page_moduleID="'.$modulID.'"';
 					//echo '<br>----<br>';
 					$this->db->simple_query($sql);

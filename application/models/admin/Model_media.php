@@ -275,7 +275,11 @@ class model_media extends CI_Model {
 
 	public function get_last_added_image() {
 
-		$sql = 'SELECT * FROM ffwbs_images WHERE folder="'.str_replace('images_cms/', '', $_POST['folder']).'/" ORDER BY imageID DESC';
+		if($_POST["media_type"] == "image") {
+			$sql = 'SELECT * FROM ffwbs_images WHERE folder="'.str_replace('images_cms/', '', $_POST['folder']).'/" ORDER BY imageID DESC';
+		} else {
+			$sql = 'SELECT * FROM ffwbs_files WHERE folder="'.str_replace('files_cms/', '', $_POST['folder']).'/" ORDER BY fileID DESC';
+		}
 		$query = $this->db->query($sql);
 		$imagedata = $query->row_array();
 
