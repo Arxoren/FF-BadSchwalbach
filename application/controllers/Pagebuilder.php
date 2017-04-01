@@ -117,8 +117,8 @@ class pagebuilder extends CI_Controller {
 							$content_module_list = $this->$getmodel->$getmethode();
 
 							foreach($content_module_list['module'] as $module) {
-								// Editorial Modules befüllen
 								
+								// Editorial Modules befüllen
 								$data['moduleID'] = $module["page_moduleID"];
 
 								if($module["model_type"]=="editorial") {	

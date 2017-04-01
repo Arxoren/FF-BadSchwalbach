@@ -611,16 +611,17 @@
 		var moduleID = $(this).attr('data-moduleid');
 		var contentmoduleID = $(this).attr('data-contentmoduleid');
 		var modul_type = $(this).attr('data-moduletype');
+		var content = $(this).next('input').val();
 		
 		//--- Modul per AJAX laden
-		
 		$.ajax({
 			type:'POST',
 			url: g_basepath+'Load_moduleeditform',
 			data: { 
 				moduleID : moduleID,
 				contentmoduleID : contentmoduleID,
-				modul_type : modul_type
+				modul_type : modul_type,
+				content : content 
 			},
 			success: function(msg) { 
 				$('#js_admin_lightboxcontentarea').append(msg); 
@@ -774,9 +775,7 @@
 		var v_icon = $(this).attr('data-icon');
 		var i = $('#admin_moduledit_imggal').children().length;
 
-		alert("hallo: "+v_fileid);
-
-		$('#admin_moduledit_imggal').append('<li class="file js_admin_moduleedit_addfile" id="slideshow_'+i+'" data-fileid="'+v_fileid+'" data-name="'+v_name+'" data-format="'+v_format+'" data-size"'+v_size+'" data-icon="'+v_icon+'"><img src="'+v_icon+'" /><p><strong>'+v_name+'</strong></p><p>'+v_format+' - '+v_size+'</p><hr class="clear" /></li>');
+		$('#admin_moduledit_imggal').append('<li class="file" id="slideshow_'+i+'" data-fileid="'+v_fileid+'" data-name="'+v_name+'" data-format="'+v_format+'" data-size="'+v_size+'" data-icon="'+v_icon+'"><img src="'+v_icon+'" /><p><strong>'+v_name+'</strong></p><p>'+v_format+' - '+v_size+'</p><div class="editpanel"><a href="#" class="js_admin_moduleedit_filedelete">delete</a><hr class="clear" /></li>');
 		$('#admin_moduledit_imggal').sortable("refresh");		
 
 		var msg = "success:Datei wurde der Liste hinzugefügt";

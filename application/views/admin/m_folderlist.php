@@ -14,7 +14,7 @@ if($_GET["type"] == 'image') {
 	}
 } else {
     foreach($files as $file) {
-	    echo '<li class="file js_admin_moduleedit_addfile" id="slideshow_'.$i.'" data-imgid="'.$file["fileID"].'" data-path="'.$file["folder"].$file["filename"].'.'.$file["format"].'">
+	    echo '<li class="file js_admin_moduleedit_addfile" data-fileid="'.$file["fileID"].'" data-name="'.$file['filename'].'" data-format="'.$file['format'].'" data-size="'.$file['size'].'" data-icon="'.base_url().'backend/images/'.basic_get_fileicon($file['format']).'">
             <img src="'.base_url().'backend/images/'.basic_get_fileicon($file['format']).'" />
             <p><strong>'.$file['filename'].'</strong></p><p>'.$file['format'].' - '.$file['size'].'</p>
         	<hr class="clear" />

@@ -329,6 +329,7 @@ class pagebuilder extends CI_Controller {
 		}
 		if($module['attachment']=="files") {	
 
+			$mdata['model_func'].'<br>';
 			if($mdata['model_func']=='video') {
 				$path = 'video';
 			} else {
@@ -348,6 +349,7 @@ class pagebuilder extends CI_Controller {
 				$_GET["path"] = $mdata['filelist']['folder'][0];
 			}
 			$mdata['files'] = $this->Model_media->media_get_files($_GET["path"]);
+			print_r($mdata['files']);
 		}
 
 		$this->load->model('site/model_'.$module["model"].'');
@@ -357,7 +359,12 @@ class pagebuilder extends CI_Controller {
 		if($module["model"] == "table") {
 			$mdata[$module["function"]] = $this->$getmodel->$getmethode($_POST["moduleID"]);
 		} else {
-			$mdata[$module["function"]] = $this->$getmodel->$getmethode($mdata['module_data']);
+			switch($module["model"]) {	
+				case "image" :  $content_data = $_POST['content']; break;
+				case "files" :  $content_data = $_POST['content']; break;
+				default :  $content_data = $mdata['module_data'];
+			}
+			$mdata[$module["function"]] = $this->$getmodel->$getmethode($content_data);
 		}
 
 		$response = $this->load->view($adminfunction, $mdata, TRUE);

@@ -18,19 +18,21 @@
                 }
                 */
                 $i = 0;
-                foreach($downloadfiles as $file) {
-                    
+                if(isset($downloadfiles) && $downloadfiles!="") {
+                    foreach($downloadfiles as $file) {
+                        
 
 
-                    echo '<li class="file" data-fileid="'.$file["fileID"].'" data-name="'.$file['filename'].'" data-format="'.$file['format'].'" data-size"'.$file['size'].'" data-icon="'.base_url().'backend/images/'.basic_get_fileicon($file['format']).'">
-                        <img src="'.base_url().'backend/images/'.basic_get_fileicon($file['format']).'" />
-                        <p><strong>'.$file['filename'].'</strong></p><p>'.$file['format'].' - '.$file['size'].'</p>
-                        <div class="editpanel">
-                            <a href="#" class="js_admin_moduleedit_filedelete">delete</a>
-                        </div>
-                        <hr class="clear" />
-                    </li>';
-                    $i++;
+                        echo '<li class="file" data-fileid="'.$file["fileID"].'" data-name="'.$file['filename'].'" data-format="'.$file['format'].'" data-size="'.$file['size'].'" data-icon="'.base_url().'backend/images/'.basic_get_fileicon($file['format']).'">
+                            <img src="'.base_url().'backend/images/'.basic_get_fileicon($file['format']).'" />
+                            <p><strong>'.$file['filename'].'</strong></p><p>'.$file['format'].' - '.$file['size'].'</p>
+                            <div class="editpanel">
+                                <a href="#" class="js_admin_moduleedit_filedelete">delete</a>
+                            </div>
+                            <hr class="clear" />
+                        </li>';
+                        $i++;
+                    }
                 }
             ?>
             </ul>
@@ -66,7 +68,7 @@
             <?php
                 $i=0;
                 foreach($files as $file) {
-                    echo '<li class="file js_admin_moduleedit_addfile" data-fileid="'.$file["fileID"].'" data-name="'.$file['filename'].'" data-format="'.$file['format'].'" data-size"'.$file['size'].'" data-icon="'.base_url().'backend/images/'.basic_get_fileicon($file['format']).'">
+                    echo '<li class="file js_admin_moduleedit_addfile" data-fileid="'.$file["fileID"].'" data-name="'.$file['filename'].'" data-format="'.$file['format'].'" data-size="'.$file['size'].'" data-icon="'.base_url().'backend/images/'.basic_get_fileicon($file['format']).'">
                         <img src="'.base_url().'backend/images/'.basic_get_fileicon($file['format']).'" />
                         <p><strong>'.$file['filename'].'</strong></p><p>'.$file['format'].' - '.$file['size'].'</p>
                         <hr class="clear" />

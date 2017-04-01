@@ -27,7 +27,7 @@
                 <label for="link">Wählen Sie eine Datei</lable>
                 <select name="link_3">
                 <?php
-                    foreach($filelist as $video) {
+                    foreach($files as $video) {
                         echo'<option value="'.$video["filename"].'">'.$video["name"].'</option>';
                     }
                 ?>

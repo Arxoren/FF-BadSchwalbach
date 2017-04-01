@@ -182,7 +182,7 @@ class model_adminnews extends CI_Model {
 			
 			if(substr($modulID, 0, 1)!=0) {
 
-				if($sontentmodule_data["model"]=="editorial") {
+				if($sontentmodule_data["model"]=="editorial" || $sontentmodule_data["model"]=="files") {
 					$sql = 'UPDATE ffwbs_news_modules SET module_data="'.$content_string.'" WHERE page_moduleID="'.$modulID.'"';
 					$this->db->simple_query($sql);
 				} else {

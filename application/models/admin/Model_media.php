@@ -97,7 +97,8 @@ class model_media extends CI_Model {
 		$sql = 'SELECT * FROM ffwbs_files WHERE folder="'.str_replace("//", "", $folder).'" ORDER BY date DESC, name ASC';
 
 		$query = $this->db->query($sql);
-		return $query->result_array();
+		$var = $query->result_array();
+		return $var;
 
 	}
 

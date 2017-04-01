@@ -21,7 +21,7 @@ class model_news extends CI_Model {
 	
 		$n = ($this->uri->total_segments())-2;
 
-		$query = $this->db->query('SELECT * FROM ffwbs_news WHERE online="1" AND newsID="'.$this->uri->rsegment($n).'"');
+		$query = $this->db->query('SELECT * FROM ffwbs_news WHERE newsID="'.$this->uri->rsegment($n).'"');
 		$news_array = $query->row_array();
 
 		if($news_array['wehrID']==0) {
@@ -30,10 +30,12 @@ class model_news extends CI_Model {
             $news_array['category'] = "FFW ".basicffw_get_vereindetails_singlevar($news_array['wehrID'], 'ort');
         }
 
-		$query = $this->db->query('SELECT * FROM ffwbs_news_modules WHERE online="1" AND newsID="'.$this->uri->rsegment($n).'" ORDER BY sort ASC');
-		$news_module_array = $query->result_array();
-
-		$news_array['module'] = $news_module_array;
+        if($news_array['online']!=0) {
+			$query = $this->db->query('SELECT * FROM ffwbs_news_modules WHERE online="1" AND newsID="'.$this->uri->rsegment($n).'" ORDER BY sort ASC');
+			$news_array['module'] = $query->result_array();
+		} else {
+			$news_array = 404;
+		}
 		return $news_array;
 			
 	}

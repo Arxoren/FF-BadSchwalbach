@@ -18,7 +18,7 @@ if(!isset($_GET["op"])) {
 		if($pagemoduleID=="video") {
 		    echo'<div class="admin_layoutmodul_panel_edit admin_hide" data-moduletype="'.$_GET["op"].'" data-contentmoduleid="'.$contentmoduleID.'" data-moduleid="'.$moduleID.'"></div>';
 		}
-		if($pagemoduleID=="files") {
+		if($pagemoduleID=="download_filelist" || $pagemoduleID=="files") {
 		    echo'<div class="admin_layoutmodul_panel_edit admin_hide" data-moduletype="'.$_GET["op"].'" data-contentmoduleid="'.$contentmoduleID.'" data-moduleid="'.$moduleID.'"></div>';
 		}	
 	?>
