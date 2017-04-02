@@ -3,32 +3,17 @@
 	var new_module = 0;
 	var icon_object = '';
 	
-	
+	/*
 	var g_basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/admin/'
 	var basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/'
-	/*
+	*/
 	var g_basepath = 'http://www.feuerwehr-badschwalbach.de/admin/'
 	var basepath = 'http://www.feuerwehr-badschwalbach.de/'
-	*/
+	
 	$(document).ready(function() {
 
  		$('.js_countsigns').change(updateCount);
  		$('.js_countsigns').keyup(updateCount);
-
-		tinymce.init({
-		  selector: '.js_textoptions',
-		  height: 200,
-		  plugins: [
-		    'advlist autolink lists link image charmap print preview anchor',
-		    'searchreplace visualblocks code fullscreen',
-		    'insertdatetime media table contextmenu paste code'
-		  ],
-		  toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link',
-		  content_css: [
-
-		  ]
-		});
-
 		$( "#globalmessage" ).delay(2000).fadeOut(1000, "swing");
 
 	});
