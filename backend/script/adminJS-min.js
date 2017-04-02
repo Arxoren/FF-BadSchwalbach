@@ -10,8 +10,6 @@
 	var g_basepath = 'http://www.feuerwehr-badschwalbach.de/admin/'
 	var basepath = 'http://www.feuerwehr-badschwalbach.de/'
 	*/
-	
-
 	$(document).ready(function() {
 
  		$('.js_countsigns').change(updateCount);
@@ -160,23 +158,6 @@
 		//e.preventDefault();
 		$( "#js_admin_fileuploadform" ).submit();
 		
-		/*
-		//var vfolder = serializeArray($('#js_admin_uploadtarget').val());
-
-		var formData = new FormData();
-		$.each(file, function(key, value) {
-	        data.append(key, value);
-	    });
-
-		$.ajax({
-			type: 'POST',
-			url: 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/admin/?op=media_upload',
-			data: {'folder': vfolder, 'file': vfile},
-			success: function() { alert("Läuft!"); },
-			error: function() { alert("NÖ!"); },
-		});
-		*/
-
 	});
 
 	$(document).on("change", ".js_meda_choosefile", function() {
@@ -1059,6 +1040,16 @@
 		});
 	});
 
+
+	/*--------------------------------------------------------------*/
+	//  ALLGEMEINER HELFER
+	/*--------------------------------------------------------------*/
+
+	$(document).on("click", "#stage", function(e) {
+
+		//alert("hallo");
+
+	});
 
 	/*--------------------------------------------------------------*/
 	//  ALLGEMEINER HELFER

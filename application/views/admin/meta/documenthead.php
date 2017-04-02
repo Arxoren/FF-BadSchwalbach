@@ -19,7 +19,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.0/less.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="<?php echo base_url().'backend/script/jquery-ui.min.js'; ?>"></script>
-    <script type="text/javascript" charset="utf-8" src="<?php echo base_url().'backend/script/tinymce/tinymce.min.js'; ?>"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="<?php //echo base_url().'backend/script/editor.js'; ?>"></script> -->
 
     <script type="text/javascript">
      
@@ -36,33 +36,6 @@
             $( ".datafacts" ).sortable({cancel: 'p'});
         }
         
-        tinymce.init({
-            selector: "div.textedit",
-            inline: true,
-            statusbar: false,
-            menubar: false,
-            object_resizing : false,
-            plugins: [
-                "autolink link anchor",
-                "searchreplace code",
-                "insertdatetime media contextmenu paste"
-            ],
-            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright | link"
-        });
-        tinymce.init({
-            selector: "textarea2",
-            inline: false,
-            statusbar: false,
-            menubar: false,
-            object_resizing : false,
-            plugins: [
-                "autolink link anchor",
-                "searchreplace code",
-                "insertdatetime media contextmenu paste"
-            ],
-            toolbar: "insertfile undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link"
-        });
-
     </script>
 
 </head>

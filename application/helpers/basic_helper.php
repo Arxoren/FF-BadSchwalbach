@@ -266,7 +266,7 @@
 
 		}
 		function strip_editor_tags($content) {
-			$content = str_replace("<div>", "[br]", str_replace("<p>", "[br]", str_replace("<br>", "[br]", $content)));
+			$content = str_replace("<li>", "|", str_replace("<div>", "[br]", str_replace("<p>", "[br]", str_replace("<br>", "[br]", $content))));
 			$content = str_replace("[br]", "<br/>", strip_tags($content));
 			$content = str_replace('"', '&quot;', $content);
 			return $content;

@@ -349,7 +349,6 @@ class pagebuilder extends CI_Controller {
 				$_GET["path"] = $mdata['filelist']['folder'][0];
 			}
 			$mdata['files'] = $this->Model_media->media_get_files($_GET["path"]);
-			print_r($mdata['files']);
 		}
 
 		$this->load->model('site/model_'.$module["model"].'');
