@@ -19,6 +19,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.0/less.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="<?php echo base_url().'backend/script/jquery-ui.min.js'; ?>"></script>
+    <script type="text/javascript" charset="utf-8" src="<?php echo base_url().'backend/script/tinymce/tinymce.min.js'; ?>"></script>
     <!-- <script type="text/javascript" charset="utf-8" src="<?php //echo base_url().'backend/script/editor.js'; ?>"></script> -->
 
     <script type="text/javascript">
@@ -34,6 +35,7 @@
             });
 
             $( ".datafacts" ).sortable({cancel: 'p'});
+            
         }
         
     </script>

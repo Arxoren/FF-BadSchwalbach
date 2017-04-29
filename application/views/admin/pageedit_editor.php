@@ -11,6 +11,8 @@
 
         <input type="hidden" name="module_reihe" class="js_module_reihe" value="" />
         <input type="hidden" name="page_name" class="js_admin_pagename" value="" />
+        <input type="hidden" name="small_stage_image" class="js_admin_smallstage" value="" />
+        <input type="hidden" name="small_stage_moduleID" class="js_admin_smallstage_moduleID" value="" />
 
         <div id="admin_siteeditbar">
 

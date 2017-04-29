@@ -258,6 +258,37 @@ class model_pageeditor extends CI_Model {
 
 		}
 
+		// Stage Speichern (EXTRA DB)
+		// -----------------------------------------
+		if($_POST["small_stage_moduleID"]!="") {
+			
+			$stage_wehrID = 0;
+
+			$test = $this->db->query('SELECT * FROM ffwbs_stages WHERE moduleID="'.$_POST["small_stage_moduleID"].'" AND wehrID="'.$stage_wehrID.'" ');
+			$testnum = $test->num_rows();
+
+			$data_new_stage = array(
+			   'moduleID' => ''.$_POST["small_stage_moduleID"].'' ,
+			   'wehrID' => '0' ,
+			   'freeuse' => '0' ,
+			   'image' => ''.$_POST["small_stage_image"].'' ,
+			   'color' => 'white',
+			   'sort' => '0',
+			   'online' => '1'
+			);
+
+			if($testnum == 1) {
+				$row = $test->row_array();
+				$this->db->where('stageID', $row["stageID"]);
+				$this->db->update('stages', $data_new_stage);
+			} else {
+				$this->db->insert('stages', $data_new_stage);
+			}
+		}
+
+		
+		// LOG befüllen
+		// -----------------------------------------
 		$log_action = 'hat die Seite "'.$_POST["pagesID"].' | '.$_POST["page_name"].'" bearbeitet.';
 		basic_writelog($log_action,'pageeditor - module delete', 2);
 

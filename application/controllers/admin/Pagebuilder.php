@@ -209,10 +209,10 @@ class pagebuilder extends CI_Controller {
 					$getmodel = "model_".$module["model_type"];
 					$getmethode = "get_".$data_quellen[$i];
 					
-					if($module["model_type"] == "table") {
-						$data[$data_quellen[$i]] = $this->$getmodel->$getmethode($module["module_data"]);
-					} else {
-						$data[$data_quellen[$i]] = $this->$getmodel->$getmethode($module["module_data"]);
+					switch($module["model_type"]) {
+						case "table": $data[$data_quellen[$i]] = $this->$getmodel->$getmethode($module["module_data"]); breaK;
+						case "stage": $data[$data_quellen[$i]] = $this->$getmodel->$getmethode($module["page_moduleID"]); breaK;
+						default: $data[$data_quellen[$i]] = $this->$getmodel->$getmethode($module["module_data"]);
 					}
 				
 				}
@@ -225,6 +225,7 @@ class pagebuilder extends CI_Controller {
 				$this->load->view('site/page_'.$module['layout'], $data);	
 				$this->load->view('admin/pageedit_editbox_close', $data);
 			} else {
+				$this->load->view('admin/pageedit_editbox_static', $data);	
 				$this->load->view('site/page_'.$module['layout'], $data);	
 			}
 		}
@@ -315,11 +316,12 @@ class pagebuilder extends CI_Controller {
 		$adminfunction = 'admin/m_'.$module["function"];
 
 		if($module['attachment']=="images") {	
-			if($mdata['model_func']=='imagegallery') {
-				$path = 'gallerie/'.$mdata['name'];
-			} else {
-				$path = $mdata['name'];
+			switch($mdata['model_func']) {
+				case 'imagegallery': $path = 'gallerie/'.$mdata['name']; break;
+				case 'smallstage_image': $path = 'stages'; break;
+				default: $path = $mdata['name'];
 			}
+
 			$_GET["path"] = $path;
 			$_GET["type"] = $module['attachment'];
 
@@ -341,7 +343,7 @@ class pagebuilder extends CI_Controller {
 			}
 			$_GET["path"] = $path;
 			$_GET["type"] = $module['attachment'];
-
+			
 			$this->load->model('admin/Model_media');
 			$mdata['filelist'] = $this->Model_media->media_get_folderstructure($module['attachment'], $path);
 
@@ -392,6 +394,7 @@ class pagebuilder extends CI_Controller {
 			} else {
 				$path = $mdata['name'];
 			}
+
 			$_GET["path"] = $path;
 			$_GET["type"] = $module['attachment'];
 

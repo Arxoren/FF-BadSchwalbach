@@ -3,18 +3,33 @@
 	var new_module = 0;
 	var icon_object = '';
 	
-	/*
+	
+	
 	var g_basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/admin/'
 	var basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/'
-	*/
+	/*
 	var g_basepath = 'http://www.feuerwehr-badschwalbach.de/admin/'
 	var basepath = 'http://www.feuerwehr-badschwalbach.de/'
-	
+	*/
+
 	$(document).ready(function() {
 
  		$('.js_countsigns').change(updateCount);
  		$('.js_countsigns').keyup(updateCount);
 		$( "#globalmessage" ).delay(2000).fadeOut(1000, "swing");
+
+		tinymce.init({
+			selector: '.js_textoptions',
+			height: 200,
+			plugins: [
+				'advlist autolink lists link image charmap print preview anchor',
+				'searchreplace visualblocks code fullscreen',
+				'insertdatetime media table contextmenu paste code'
+			],
+			toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link',
+			content_css: [
+			]
+		});
 
 	});
 	
@@ -90,6 +105,14 @@
 		$(this).children('.admin_table_delete').addClass('admin_hide');
 
 	});
+	/*
+	$(document).on("mouseover", '#stage', function() {
+		$(this).prev('.admin_layoutmodul_panel_edit').removeClass('admin_hide');
+	});
+	$(document).on("mouseleave", '#stage', function() {
+		$(this).prev('.admin_layoutmodul_panel_edit').addClass('admin_hide');
+	});
+	*/
 
 	$('#js-send-form').click(function() {
 		
@@ -323,7 +346,6 @@
 						var i = $('#admin_moduledit_imggal').children().length;
 						$('#admin_moduledit_imggal').append('<li class="js_admin_moduleedit_imagedelete" id="slideshow_'+i+'" data-imgid="'+message[2]+'"><img src="'+basepath+'frontend/images_cms/'+message[5]+message[3]+'.'+message[4]+'" /></li>');
 					} else {
-						alert('Hallo: '+message);
 						$('#admin_moduledit_imggal').append('<li class="file" id="slideshow_'+i+'" data-fileid="'+message[2]+'" data-name="'+message[3]+'" data-format="'+message[6]+'" data-size"'+message[5]+'" data-icon=""><p><strong>'+message[3]+'</strong></p><p>'+message[6]+' - '+message[5]+'</p><hr class="clear" /></li>');
 					}
 
@@ -426,7 +448,7 @@
 			   		});
 
 					$('[name="content_'+modulID+'"]').val(contentdetail.join("|"));	   	
-				}	
+				}
 
 		   		// ModulID's in der Reiehenfolge auslesen
 		   		// ------------------------------------------------------------------------------
@@ -579,6 +601,8 @@
 		var modul_type = $(this).attr('data-moduletype');
 		var content = $(this).next('input').val();
 		
+		//alert("Yep! "+moduleID+"-"+contentmoduleID+" / "+modul_type+" / "+content);
+
 		//--- Modul per AJAX laden
 		$.ajax({
 			type:'POST',
@@ -1030,10 +1054,61 @@
 	//  ALLGEMEINER HELFER
 	/*--------------------------------------------------------------*/
 
-	$(document).on("click", "#stage", function(e) {
+	$(document).on("click", ".js_admin_changestageimage", function(e) {
 
-		//alert("hallo");
+		var image = $(this).attr('data-path');
+		var moduleID = $(this).attr('data-moduleID');
+		
+		$('#stage').children().css('background-image', 'url('+basepath+'/frontend/images_cms/stages/'+image+')');  
+		$('.js_admin_smallstage').val(image);
+		$('.js_admin_smallstage_moduleID').val(moduleID);
+		close_module_editlightbox();
 
+	});
+
+	$(document).on("submit", "#js_admin_savestage_ajax", function(e) {
+		e.preventDefault();
+
+		var media_type = $('[name="media_type"]').val();
+		var formData = new FormData(this);
+		$.each($("input[type=file]"), function(i, obj) {
+       		$.each(obj.files,function(j, file){
+           		formData.append('media_file['+j+']', file);
+		    })
+		});
+
+		console.log(formData);
+
+		//--- Modul per AJAX laden
+		$.ajax({
+			type:'POST',
+			url: g_basepath+'imageupload',
+            data: formData,
+            cache:false,
+            contentType: false,
+            processData: false,
+            success:function(msg){
+				var message = msg.split(":");
+				$('.admin_lightbox_subform').addClass('admin_hide');
+				$('.admin_lightbox_mainform').removeClass('admin_hide');
+
+				if(message[0]=="success") {
+					// Bild in die Liste einfügen
+
+					if(media_type == "image") {	
+						var i = $('#admin_moduledit_imggal').children().length;
+						$('#admin_moduledit_imggal').append('<li class="js_admin_changestageimage" id="slideshow_'+i+'" data-imgid="'+message[2]+'" data-path="'+message[3]+'.'+message[4]+'"><img src="'+basepath+'frontend/images_cms/'+message[5]+message[3]+'.'+message[4]+'" /></li>');
+					}
+				}
+				console.log(message);
+				module_show_message(message, "");
+            },
+            error: function(formData){
+                console.log("error");
+                console.log(formData);
+            }
+		});
+	
 	});
 
 	/*--------------------------------------------------------------*/
