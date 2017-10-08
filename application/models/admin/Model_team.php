@@ -221,6 +221,9 @@ class model_team extends CI_Model {
 			$filedir = "./frontend/images_cms/mannschaft/".$team["bild"];
 			if(unlink ($filedir)) {
 				$control = "SUCCSESS";
+				$picture = explode(".", $team["bild"]);
+				$sql= 'DELETE FROM ffwbs_images WHERE folder="mannschaft/" AND name="'.$picture[0].'"';
+				$query = $this->db->query($sql);
 			}
 		}
 

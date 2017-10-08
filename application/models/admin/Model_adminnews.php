@@ -76,6 +76,7 @@ class model_adminnews extends CI_Model {
 		
 		$data_new_module = array(
 		   'newsID' => ''.$newest_newsID.'' ,
+		   'contentmoduleID' => '3' ,
 		   'model_type' => 'editorial' ,
 		   'model_func' => '' ,
 		   'layout' => 'text' ,
@@ -232,7 +233,7 @@ class model_adminnews extends CI_Model {
 					);
 					$this->db->insert('news_modules', $data_new_module);
 					$newest_tabeID = $this->db->insert_id();
-					
+
 					$CI =& get_instance();
 			        $CI->load->model('admin/model_pageeditor');
 			        $CI->model_pageeditor->page_savetable($_POST["content_".$modulID], $newest_tabeID, 'news_modules');
@@ -328,7 +329,58 @@ class model_adminnews extends CI_Model {
 		$GLOBALS['globalmessage'] = "success:Die News '#".$_GET["id"]."' wurde gelöscht";
 
 	}
-	
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| STARTPAGE NEWS-STAGE
+	|--------------------------------------------------------------------------
+	*/
+	public function news_stageliste() {
+		
+		if(!isset($_POST["filter_wehren"]) && isset($_GET["sort"])) {
+			if($_GET["sort"]!=0) {	
+				$_POST["filter_wehren"] = $_GET["sort"];
+			}
+		}
+
+		//--- Die Stages der spezifischen Wehr aufrufen
+		if(!isset($_POST["filter_wehren"]) || $_POST["filter_wehren"]=="alle") {
+			$sql = 'SELECT * FROM ffwbs_zuordnung_var WHERE varname="newsstage" AND wehrID="0"';
+			$var['aktfilter_wehren'] = 0;
+		} else {
+			$sql = 'SELECT * FROM ffwbs_zuordnung_var WHERE varname="newsstage" AND wehrID="'.$_POST["filter_wehren"].'"';
+			$var['aktfilter_wehren'] = $_POST["filter_wehren"];
+		}
+		$query = $this->db->query($sql);
+		$aktstages = $query->row_array();
+		$aktstages = explode(":", $aktstages["value"]);
+		$var['stages'] = array();
+
+		foreach($aktstages as $stage) {
+			$sql = 'SELECT * FROM ffwbs_stages WHERE stageID="'.$stage.'"';
+			$query = $this->db->query($sql);
+			$result = $query->row_array();
+			array_push($var['stages'], $result);
+		}
+
+		//--- Alle Stages abrufen
+		$sql = 'SELECT * FROM ffwbs_stages WHERE newsstage="1"';
+		$query = $this->db->query($sql);
+		$var['allstages'] = $query->result_array();
+
+		//--- Wehren Filter befüllen
+		$query = $this->db->query('SELECT * FROM ffwbs_wehren ORDER BY sort ASC');
+		$var['filter_wehren'] = $query->result_array();
+
+		//--- Page Headline festlegen
+		$var['page_headline'] = "News-Bühnen bearbeiten";
+		$var['page_btn_addnew'] = "Eine neue Bühne anlegen";
+		
+		return $var;
+	}
+
+		
 }
 
 ?>
