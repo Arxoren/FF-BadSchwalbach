@@ -82,6 +82,7 @@ class model_adminnews extends CI_Model {
 		   'layout' => 'text' ,
 		   'module_data' => '[text::Ein neues Modul.]' ,
 		   'subpage_module' => '0' ,
+		   'online' => '1' ,
 		   'sort' => '0'
 		);
 		$this->db->insert('news_modules', $data_new_module);

@@ -3,7 +3,7 @@
 <div id="admin_contentbox">
     <div class="admin_lightbox_mainform">
         <div class="admin_headrow">    
-            <h1>Das Bühnenbild ausbauen</h1>
+            <h1>Ein Bühnenbild wählen</h1>
             <a href="#" id="js_admin_moduleedit_opensubform" class="admin_icon_button admin_icon_upload" data-moduleID="<?php echo $_POST['moduleID']; ?>">&nbsp;</a>
             <!--<a href="#" id="js_admin_modulesettings" class="admin_icon_button admin_icon_settings" data-moduleID="<?php //echo $_POST['moduleID']; ?>">&nbsp;</a> -->
         </div>

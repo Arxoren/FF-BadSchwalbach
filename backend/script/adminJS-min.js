@@ -4,13 +4,14 @@
 	var icon_object = '';
 	
 	
-	
+	/*
 	var g_basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/admin/'
 	var basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/'
-	/*
+	*/	
+
 	var g_basepath = 'http://www.feuerwehr-badschwalbach.de/admin/'
 	var basepath = 'http://www.feuerwehr-badschwalbach.de/'
-	*/
+
 
 	$(document).ready(function() {
 
