@@ -5,8 +5,9 @@ class model_unwetter extends CI_Model {
     private $dwd_datetime_pattern = "d.m. H:i";
     private $dwd_prewarnings = false;
 
-	public function get_unwetter($load_prewarnings = FALSE) {
-        $json_object = $this->get_dwd_json_as_object();
+    public function get_unwetter($load_prewarnings = FALSE) {
+      $json_object = $this->get_dwd_json_as_object();
+      if ($json_object != NULL) {
         $warnings = $json_object->warnings;
         $hasWarning = false;
         $prewarnings = $json_object->vorabInformation;
@@ -30,44 +31,58 @@ class model_unwetter extends CI_Model {
         }
 
         if($this->dwd_prewarnings == true) {
-	        if (!$hasWarning && $load_prewarnings) {
-	            foreach ($prewarnings as $prewarning) {
-	                $content = $prewarning[0];
-	                $content->regionName = $this->trans_toUmlaut($content->regionName);
+            if (!$hasWarning && $load_prewarnings) {
+                foreach ($prewarnings as $prewarning) {
+                    $content = $prewarning[0];
+                    $content->regionName = $this->trans_toUmlaut($content->regionName);
 
-	                if ($content->regionName == $this->dwd_region) {
-	                    $content->description = $this->trans_toUmlaut($content->description);
-	                    $content->headline = $this->trans_toUmlaut($content->headline);
-	                    $content->event = $this->trans_toUmlaut($content->event);
-	                    $content->instruction = $this->trans_toUmlaut($content->instruction);
-	                    $content->start = date($this->dwd_datetime_pattern, substr($content->start, 0, -3));
-	                    $content->end = date($this->dwd_datetime_pattern, substr($content->end, 0, -3));
-	                    return $content;
-	                }
-	            }
-	        }
-	    }
-        
-        return NULL;
+                    if ($content->regionName == $this->dwd_region) {
+                        $content->description = $this->trans_toUmlaut($content->description);
+                        $content->headline = $this->trans_toUmlaut($content->headline);
+                        $content->event = $this->trans_toUmlaut($content->event);
+                        $content->instruction = $this->trans_toUmlaut($content->instruction);
+                        $content->start = date($this->dwd_datetime_pattern, substr($content->start, 0, -3));
+                        $content->end = date($this->dwd_datetime_pattern, substr($content->end, 0, -3));
+                        return $content;
+                    }
+                }
+            }
+        } else {
+          return NULL;
+        }
+        }
+
+      return NULL;
     }
 
     private function get_dwd_json_as_object() {
-        
-        $url = 'http://www.dwd.de/DWD/warnungen/warnapp/json/warnings.json';
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        $result = curl_exec($ch);
-        curl_close($ch); 
-        
+        $url = 'https://www.dwd.de/DWD/warnungen/warnapp/json/warnings.json';
+
+            ob_start();
+            $out = fopen('php://output', 'w');
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_VERBOSE, true);
+            curl_setopt($ch, CURLOPT_STDERR, $out);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            $result = curl_exec($ch);
+
+            fclose($out);
+            $debug = ob_get_clean();
+
+            curl_close($ch);
+
+            //var_dump($debug); die();
+            //var_dump($result);
+
         // JavaScript Function Code entfernen (wird vom DWD als JSONP ausgeliefert)
         $json = $this->extract_unit($result, 'warnWetter.loadWarnings(', ');');
 
         // Umlaute und ß umwandeln und mit nachfolgendem Q markieren für Rückumwandlung ( wegen json_Decode )
         $json_trans = $this->trans_Umlaut($json);
-
         return json_decode($json_trans);
     }
 
