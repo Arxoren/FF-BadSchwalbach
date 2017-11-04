@@ -92,16 +92,22 @@ class model_pagebuilder extends CI_Model {
 		return $content_modules;
 	}
 
+
+	/*
+	|--------------------------------------------------------------------------
+	| Content der Editorial Module ermitteln (direkt im jeweiligen DB Eintrag)
+	|--------------------------------------------------------------------------
+	*/
 	public function get_content($content) {
 
-		$test=preg_match_all("#\[(.*?)]#si", $content, $treffer, PREG_SET_ORDER);
+		$test=preg_match_all("#\{(.*?)}#si", $content, $treffer, PREG_SET_ORDER);
 		$content = array();
 
 		for($i=0; $i<count($treffer); $i++) {
-			$replace_array = array("[", "]");
+			$replace_array = array("{", "}");
 			$treffer[$i][0]=str_replace($replace_array, "", $treffer[$i][0]);
 			$content_items=explode("::", $treffer[$i][0]);
-			$content[$content_items[0]]=$content_items[1];
+			$content[$content_items[0]]=text_format_parsing($content_items[1]);
 		}
 
 		return $content;

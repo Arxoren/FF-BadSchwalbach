@@ -2,16 +2,15 @@
 
 	var new_module = 0;
 	var icon_object = '';
+	var editor_selRange;	
 	
-	
-	/*
 	var g_basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/admin/'
 	var basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/'
-	*/	
-
+		
+	/*
 	var g_basepath = 'http://www.feuerwehr-badschwalbach.de/admin/'
 	var basepath = 'http://www.feuerwehr-badschwalbach.de/'
-
+	*/
 
 	$(document).ready(function() {
 
@@ -106,6 +105,21 @@
 		$(this).children('.admin_table_delete').addClass('admin_hide');
 
 	});
+	$(document).on("click", '[contenteditable="true"]', function() {
+		var text = $(this).parent().parent().parent('.admin_layoutmodul').attr("data-pagemodule-type");;
+		if(text=="editorial") {
+			$(this).parent().parent().parent('.admin_layoutmodul').children('.admin_layoutmodul_panel_editor').removeClass('admin_hide');
+			
+		}
+	});
+	
+	$(document).on("blur", '[contenteditable="true"]', function() {
+		if(!$(this).parent().parent().parent('.admin_layoutmodul').children('.admin_layoutmodul_panel_editor').hasClass('admin_hide')) {
+			$(this).parent().parent().parent('.admin_layoutmodul').children('.admin_layoutmodul_panel_editor').addClass('admin_hide');
+		}
+	});	
+	
+
 	/*
 	$(document).on("mouseover", '#stage', function() {
 		$(this).prev('.admin_layoutmodul_panel_edit').removeClass('admin_hide');
@@ -117,7 +131,14 @@
 
 	$('#js-send-form').click(function() {
 		
-		$( "#admin_form" ).submit();
+		if($('#js-send-form').attr("checkform")=="yes") {
+			
+			var myForm = document.getElementById('admin_form');
+			formData = new FormData(myForm);
+			checkform(formData);
+		} else {
+			$( "#admin_form" ).submit();
+		}
 
 	});
 
@@ -133,6 +154,68 @@
        	}
 
 	};
+
+	function checkform(formData) {
+		
+		// Bestehende Messages zurücksetzen
+		$('[data-error-msg="js_form_errormsg"]').remove();
+		$('.input_error').removeClass("input_error")
+
+		//--- Modul per AJAX laden
+		$.ajax({
+			type:'POST',
+			url: g_basepath+'Load_checkform',
+            data: formData,
+            cache:false,
+            contentType: false,
+            processData: false,
+            success:function(msg){
+				if(msg=="yes") {
+					$( "#admin_form" ).submit();
+				} else {
+					error = msg.split(":");
+					for (i = 0; i < error.length; i++) { 
+						error_details = error[i].split("|");
+						
+						if(error_details[2]!='group') {
+							if(error_details[2]!='array') {
+								// Set Field Highlight
+								$('[name="'+error_details[0]+'"]').addClass("input_error");
+								// Write Error Description
+								html = '<div class="error" data-error-msg="js_form_errormsg">'+error_details[1]+'</div>';
+									
+								if(parseInt(error_details[2])==0) {
+									$(html).insertAfter('[name="'+error_details[0]+'"]');
+								} else {
+									//$(html).parent().insertAfter('[name="'+error_details[0]+'"]');
+									$('[name="'+error_details[0]+'"]').parent().parent().parent().after(html);
+								}
+							} else {
+								html = '<div class="error" data-error-msg="js_form_errormsg">'+error_details[1]+'</div>';
+								$('[data-group="'+error_details[0]+'"]').after(html);
+							}
+						} else {
+							$('[name="'+error_details[0]+'"]').parent().addClass("input_error");
+							html = '<div class="error" data-error-msg="js_form_errormsg">'+error_details[1]+'</div>';
+							$('[name="'+error_details[0]+'"]').parent().after(html);
+						}
+					}
+					
+					// Globale Fehlermeldung ausspielen
+					var message_0="error";
+					var message_1="Es sind einge Fehler Aufgetreten bitte kontrollieren Sie Ihre Eingaben!";
+					$('<div id="globalmessage"><p class="'+message_0+'">'+message_1+'</p></div>').insertBefore("#admin_header");
+					$( "#globalmessage" ).delay(2000).fadeOut(1000, "swing");
+					$('body,html').animate({ scrollTop: 0 }, 50);
+				}
+            },
+            error: function(formData){
+                console.log("error");
+                console.log(formData);
+            }
+		});	
+		
+	}
 
 	/*--------------------------------------------------------------*/
 	//  Image upload
@@ -158,7 +241,7 @@
 		$('.js_adminimageupload_box').addClass('admin_hide');
 		$(html).insertAfter('.admin_uploadbutton');
 		$('#js_admin_savefile').addClass('admin_hide');
-		$( "#js_admin_fileuploadform" ).submit();
+		$('#js_admin_fileuploadform').submit();
 
 	});
 
@@ -221,7 +304,10 @@
 	/*--------------------------------------------------------------*/
 	
 	$('.js_admin_opendrawer').click(function(e) {
-		e.preventDefault();
+		onlylink = $(this).attr("type");
+		if(onlylink!="checkbox") {
+			e.preventDefault();
+		}
 		var drawerID = $(this).attr("data-drawer");
 
 		if($(this).is(':checked')) {
@@ -325,7 +411,7 @@
 		    })
 		});
 
-		console.log(formData);
+		//console.log(formData);
 
 		//--- Modul per AJAX laden
 		$.ajax({
@@ -488,7 +574,7 @@
 		$.ajax({
 			type:'POST',
 			url: g_basepath+'Load_contentmodulelist',
-			data: "text=THE NEW TEXT MODULE<br>dumdidum<br>Loremipsum<br>dolor",
+			data: "text=THE NEW TEXT MODULE<br>Loremipsum<br>dolor",
 			success: function(msg) { 
 				$(msg).insertAfter( $('.js_moduleresult_'+pos));
 			},
@@ -519,7 +605,7 @@
 			type:'POST',
 			url: g_basepath+'Load_contentmodule',
 			data: { 
-				text: "THE NEW TEXT MODULE<br>dumdidum<br>Loremipsum<br>dolor", 
+				text: "THE NEW TEXT MODULE<br>Loremipsum dolor", 
 				moduleID : moduleListID,
 				itemnumber: "0"+new_module, 
 				op: op 
@@ -616,9 +702,9 @@
 			},
 			success: function(msg) { 
 				$('#js_admin_lightboxcontentarea').append(msg); 
-				$( "#admin_moduledit_imggal" ).sortable();
+				$('#admin_moduledit_imggal').sortable();
 			},
-			error: function() { alert("NÖ!"); },
+			error: function() { alert("Sorry - jQuerry could not call the PHP function."+msg); },
 			complete: function(){
 				
 			},
@@ -737,7 +823,7 @@
 	   		} else {
 	   			images_html = images_html+'<li class="slideshow_'+modulID+'_'+i+'">'+$(this).html()+'</li>';
 	   		}
-	   		images = images+'[img::'+ $(this).attr('data-imgid')+']';
+	   		images = images+'{img::'+ $(this).attr('data-imgid')+'}';
 	   		i++;
 
 	    });
@@ -786,7 +872,7 @@
 		$('#admin_moduledit_imggal').children().each(function(){
 			
    			files_html = files_html+'<li><a href="'+basepath+'frontend/files_cms/'+$(this).attr('data-name')+'" download><img src="'+basepath+'frontend/images/icons/icon_download.svg" /><p class="name">'+$(this).attr('data-name')+'</p><p class="desc">'+$(this).attr('data-format')+' Dokument / '+$(this).attr('data-size')+'</p></a></li>';
-	   		files = files+'[file::'+ $(this).attr('data-fileid')+']';
+	   		files = files+'{file::'+ $(this).attr('data-fileid')+'}';
 	   		i++;
 
 	    });
@@ -844,7 +930,7 @@
 	});
 
 	
-	//  special Module edit functions << TABLES >>
+	// Special Module edit functions << TABLES >>
 	/*--------------------------------------------------------------*/
 		
 	$(document).on("click", ".admin_layoutmodul_panel_addnewcell", function(e) {
@@ -916,7 +1002,7 @@
 		});
 
 		link = linkname.split("/");
-		value = '[video::'+type+'::'+link[link.length-1]+']';
+		value = '{video::'+type+'::'+link[link.length-1]+'}';
 		html = '<div class="responsive-video"><img src="'+basepath+'backend/images/contentmodule/icon_module_video.svg" /><p>Speichern Sie die Seite, um die Videovorschau zu sehen:<br/>Type: <strong>'+type+'</strong><br/>URL: <strong>'+linkname+'</strong></p></div>';
 		
 		$('[name="content_'+modulID+'"]').val(value);
@@ -1113,6 +1199,119 @@
 	});
 
 	/*--------------------------------------------------------------*/
+	//  Text-Editor
+	/*--------------------------------------------------------------*/
+	
+	$('.js_admin_editorbutton').on('mousedown', 
+	    /** @param {!jQuery.Event} event */ 
+	    function(event) {
+	        event.preventDefault();
+	    }
+	);
+	$(document).on("click", ".js_admin_insertlink", function(e) {
+		e.preventDefault();
+
+		var selObj = window.getSelection();
+		var selectedText = selObj.toString();
+		editor_selRange = saveSelection();
+
+		if(selObj.baseNode.parentNode.tagName === 'A') {
+			stripBBCode(selObj);
+		} else {
+			$('#js_admin_lightbox').removeClass('admin_hide');
+			$(document.body).addClass('admin_noscroll');
+
+			//--- Modul per AJAX laden
+			$.ajax({
+				type:'POST',
+				url: g_basepath+'Load_editorfunctions',
+				data: { 
+					formtype: 'link'
+				},
+				success: function(msg) { 
+					$('#js_admin_lightboxcontentarea').append(msg); 
+					$('.js_admin_linkeditor_text').val(selectedText);
+					//alert("Selected Text: "+selectedText);
+				},
+				error: function() { 
+					alert("Sorry - jQuerry could not call the PHP function."); },
+				complete: function(){ },
+			});
+		}
+	});
+	$(document).on("click", "#js_admin_linkeditor_save", function(e) {
+		e.preventDefault();
+	
+		restoreSelection(editor_selRange);
+
+		var link = $('.js_admin_linkeditor_link').val();
+		var target = $('.js_admin_linkeditor_target').val();
+		var text = $('.js_admin_linkeditor_text').val();
+		
+		if(link!="" && text!="") {
+			var text = '<a href="'+link+'" target="'+target+'">'+text+'</a> ';
+			insertTextAtCursor(text);
+			close_module_editlightbox();
+		}
+	});		
+	$(document).on("click", ".js_admin_insertbold", function(e) {
+		e.preventDefault();
+
+		var selObj = window.getSelection();
+		var selectedText = selObj.toString();
+
+		if(selectedText!="") {
+			if(selObj.baseNode.parentNode.tagName === 'STRONG') {
+				stripBBCode(selObj);
+			} else {
+				insertBBCode(selObj, '<strong>'+selectedText+'</strong>');
+			}
+		}
+		selObj.removeAllRanges();
+	});
+	$(document).on("click", ".js_admin_insertkursiv", function(e) {
+		e.preventDefault();
+
+		var selObj = window.getSelection();
+		var selectedText = selObj.toString();
+		
+		if(selectedText!="") {
+			if(selObj.baseNode.parentNode.tagName === 'I') {
+				stripBBCode(selObj);
+			} else {
+				insertBBCode(selObj, '<i>'+selectedText+'</i>');
+			}
+		}
+		selObj.removeAllRanges();
+	});
+	$(document).on("click", ".js_admin_insertunderline", function(e) {
+		e.preventDefault();
+
+		var selObj = window.getSelection();
+		var selectedText = selObj.toString();
+		
+		if(selectedText!="") {
+			if(selObj.baseNode.parentNode.tagName === 'U') {
+				stripBBCode(selObj);
+			} else {
+				insertBBCode(selObj, '<u>'+selectedText+'</u>');
+			}
+		}
+		selObj.removeAllRanges();
+	});
+
+	function stripBBCode(selObj) {
+	    var range = selObj.getRangeAt(0);
+	    var node = $(range.commonAncestorContainer);
+        node.unwrap();
+	}
+	function insertBBCode(selObj, selectedText) {
+		range = selObj.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(range.createContextualFragment(selectedText));
+	}
+
+	/*--------------------------------------------------------------*/
 	//  ALLGEMEINER HELFER
 	/*--------------------------------------------------------------*/
 
@@ -1130,5 +1329,45 @@
 	        }
 	    }
 	};
+
+	function saveSelection() {
+	    if (window.getSelection) {
+	        sel = window.getSelection();
+	        if (sel.getRangeAt && sel.rangeCount) {
+	            return sel.getRangeAt(0);
+	        }
+	    } else if (document.selection && document.selection.createRange) {
+	        return document.selection.createRange();
+	    }
+	    return null;
+	}
+	function restoreSelection(range) {
+	    if (range) {
+	        if (window.getSelection) {
+	            sel = window.getSelection();
+	            sel.removeAllRanges();
+	            sel.addRange(range);
+	        } else if (document.selection && range.select) {
+	            range.select();
+	        }
+	    }
+	}
+	function insertTextAtCursor(text) {
+	    var sel, range, html;
+	    if (window.getSelection) {
+	        sel = window.getSelection();
+	        if (sel.getRangeAt && sel.rangeCount) {
+	            range = sel.getRangeAt(0);
+	            range.deleteContents();
+	            var textNode = text; 
+	            range.insertNode(range.createContextualFragment(textNode));
+	            sel.removeAllRanges();
+	        }
+	    } else if (document.selection && document.selection.createRange) {
+	        range = document.selection.createRange();
+	        range.pasteHTML(text);
+	        range.select();
+	    }
+	}
 
 })(jQuery);

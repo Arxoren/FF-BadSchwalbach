@@ -62,9 +62,11 @@ $route['admin/Load_contentmodule'] = "admin/pagebuilder/get_view_ajax";
 $route['admin/Load_contentmodulelist'] = "admin/pagebuilder/get_modulelist_ajax";
 $route['admin/Load_moduleeditform'] = "admin/pagebuilder/get_moduleform_ajax";
 $route['admin/Load_moduleadminform'] = "admin/pagebuilder/get_adminmoduleform_ajax";
+$route['admin/Load_editorfunctions'] = "admin/pagebuilder/get_admineditorfunctions_ajax";
 $route['admin/Load_folder'] = "admin/pagebuilder/get_folderlist_ajax";
 $route['admin/Load_inserticons'] = "admin/pagebuilder/get_icons";
 $route['admin/Load_imageupload'] = "admin/pagebuilder/get_imageupload_ajax";
+$route['admin/Load_checkform'] = "admin/pagebuilder/checkform_ajax";
 $route['admin/imageupload'] = "admin/pagebuilder/imageupload_ajax";
 $route['admin/save_modulesettings'] = "admin/pagebuilder/save_module_settings";
 

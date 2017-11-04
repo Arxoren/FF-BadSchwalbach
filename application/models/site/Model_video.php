@@ -17,7 +17,7 @@ class model_video extends CI_Model {
 		*/
 
 		if($data!="") {
-			$array = explode("::", str_replace("[", "", str_replace("]", "", $data)));
+			$array = explode("::", str_replace("{", "", str_replace("}", "", $data)));
 
 			if($array[1]=="file") {
 				$filedetails = explode(".", $array[2]);

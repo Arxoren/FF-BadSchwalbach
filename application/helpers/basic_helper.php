@@ -266,11 +266,59 @@
 
 		}
 		function strip_editor_tags($content) {
+			
+			//--- Editor Formate umwandeln
+			$content = str_replace('<strong>', '[b]', str_replace('</strong>', '[/b]', $content));
+			$content = str_replace('<i>', '[i]', str_replace('</i>', '[/i]', $content));
+			$content = str_replace('<u>', '[u]', str_replace('</i>', '[/u]', $content));
+
+			$test=preg_match_all('#\<a href=\"(.*?)\" target=\"(.*?)\"\>(.*?)\<\/a\>#si', $content, $treffer, PREG_SET_ORDER);
+			$i = 0;
+			foreach($treffer as $string) {
+				$textvar = '[url='.$string[1].'='.$string[2].']'.$string[3].'[/url]';
+				$content=str_replace($string[0], $textvar, $content);
+			}
+
+			//--- Autoformate durch editable Tags entfernen
 			$content = str_replace("<li>", "|", str_replace("<div>", "[br]", str_replace("<p>", "[br]", str_replace("<br>", "[br]", $content))));
 			$content = str_replace("[br]", "<br/>", strip_tags($content));
 			$content = str_replace('"', '&quot;', $content);
+			
 			return $content;
 		}
+
+		function text_format_parsing($content) {
+			
+			/*
+			|-------------------------------------------------------
+			| ### Pseudo Code für Text Formatierungen
+			|-------------------------------------------------------
+			|	LINK => [url=adressstring=target=title]*txt[/url]
+			|-------------------------------------------------------
+			*/
+
+			//if($GLOBALS['editable_tag']=="") {
+				// Links Finden und ersetzen
+				//---------------------------
+				$test=preg_match_all("#\[url=(.*?)=(.*?)\](.*?)\[\/url\]#si", $content, $treffer, PREG_SET_ORDER);
+				$i = 0;
+
+				foreach($treffer as $string) {
+					if(substr($string[1], 0, 7)!="http://") {
+						$link = "http://".$string[1];
+					} else {
+						$link = $string[1];
+					}
+					$textvar = '<a href="'.$link.'" class="textlink" target="'.$string[2].'">'.$string[3].'</a>';
+					$content=str_replace($string[0], $textvar, $content);
+				}
+				//---------------------------
+				$content = str_replace('[b]', '<strong>', str_replace('[/b]', '</strong>', $content));
+				$content = str_replace('[i]', '<i>', str_replace('[/i]', '</i>', $content));
+				$content = str_replace('[u]', '<u>', str_replace('[/i]', '</u>', $content));
+			//}
+			return $content;
+		} 
 
     	function basic_get_pagepath($internalurl_segment) {
 			

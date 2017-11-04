@@ -38,7 +38,7 @@ $ch = curl_init();
                 }
                 echo'</div>';
             }
-            if($einsatz['ort']!="") {
+            if($einsatz['ort']!="keine Angaben") {
                 echo'
                 <div class="googlemaps">
                     <iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.de/maps?q='.$einsatz['ort'].'&iwloc=&ie=UTF8&t=m&z=13&output=embed&z=15"></iframe><br />

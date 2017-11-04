@@ -8,7 +8,21 @@ if(!isset($_GET["op"])) {
 <div class="admin_layoutmodul js_adminlayoutmodul_<?php echo $moduleID; ?>" data-module-id="<?php echo $moduleID; ?>" data-pagemodule-type="<?php echo $pagemoduleID; ?>" data-contentmodule-id="<?php echo $contentmoduleID; ?>">
     <div class="admin_layoutmodul_panel admin_hide"></div>
     <div class="admin_layoutmodul_panel_delete admin_hide"></div>
+
 	<?php
+
+		if($pagemoduleID=='editorial') {
+		    echo'
+		    <div class="admin_layoutmodul_panel_editor admin_hide">
+		    	<ul>
+		    		<li><button class="textlink js_admin_insertlink js_admin_editorbutton">alert selection</button></li>
+		    		<li><button class="textbold js_admin_insertbold js_admin_editorbutton">alert selection</button></li>
+		    		<li><button class="textkursiv js_admin_insertkursiv js_admin_editorbutton">alert selection</button></li>
+		    		<li><button class="textunderline js_admin_insertunderline js_admin_editorbutton">alert selection</button></li>
+		    	</ul>
+		    </div>';
+		}
+
 		if($contentmoduleID==6) {
 		    echo'<div class="admin_layoutmodul_panel_edit admin_hide" data-moduletype="'.$_GET["op"].'" data-contentmoduleid="'.$contentmoduleID.'" data-moduleid="'.$moduleID.'"></div>';
 		}

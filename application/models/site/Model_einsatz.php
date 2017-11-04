@@ -110,6 +110,10 @@ class model_einsatz extends CI_Model {
 		$min = $interval->format('%i');
 		$einsatzarray['dauer_m'] = $min+($hour*60)+(($day*24)*60);
 
+		if($einsatzarray['ort']=="") {
+			$einsatzarray['ort'] = "keine Angaben";
+		}
+
 		return $einsatzarray;
 
 	}

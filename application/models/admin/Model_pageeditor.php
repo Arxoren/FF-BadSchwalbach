@@ -185,7 +185,7 @@ class model_pageeditor extends CI_Model {
 					//--- Inhalte bereinigen und Zeilenumbrüche beibehalten
 					$content = strip_editor_tags($content);
 
-					$content_string = $content_string.'['.$stringname[$z].'::'.$content.']';
+					$content_string = $content_string.'{'.$stringname[$z].'::'.$content.'}';
 					$z++;
 				}
 			} else {

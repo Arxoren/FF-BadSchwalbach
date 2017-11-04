@@ -330,6 +330,117 @@ class model_einsatz extends CI_Model {
 	|--------------------------------------------------------------------------
 	| Einen Einsatz nicht im Frontend anzeigen
 	|--------------------------------------------------------------------------
+	|	field_name => Der "name" des Formularfeldes
+	|	expected_value => Der erwartete Inhalt / Test
+	|		- '' 		=> Auf Inhalt geprüft
+	|		- 'exists' 	=> Auf Existenz überprüft
+	|	level => gibt das level zurück wo die Message im FE mit jQuery platziert wird  
+	|		- group 	=> Gibt nur eine Message am ende eine Grupppe aus
+	|		- array 	=> Gibt eine Message für einen array Block aus
+	|		- 0 		=> Gibt die Msg direkt unter dem Feld aus
+	|		- *ziffer	=> Gibt die Message entsprechend unter dem *parent aus 
+	|--------------------------------------------------------------------------
+	*/
+	public function checkform() {
+
+		$check_list [] = array(
+		   'field_name' => 'title' ,
+		   'expected_value' => '' ,
+		   'errormsg' => 'Es muss ein Titel eingegeben werden',
+		   'level' => '0'
+		);
+		$check_list [] = array(
+		   'field_name' => 'stichwort' ,
+		   'expected_value' => '' ,
+		   'errormsg' => 'Es muss ein Stichwort eingegeben werden',
+		   'level' => '0'
+		);
+		$check_list [] = array(
+		   'field_name' => 'text_intro' ,
+		   'expected_value' => '' ,
+		   'errormsg' => 'Es muss ein Intro eingegeben werden',
+		   'level' => '0'
+		);		
+		$check_list [] = array(
+		   'field_name' => 'type' ,
+		   'expected_value' => 'exists' ,
+		   'errormsg' => 'Es muss eine Einsatzart angegeben werden',
+		   'level' => 'group'
+		);
+		$check_list [] = array(
+		   'field_name' => 'wehren' ,
+		   'expected_value' => 'exists' ,
+		   'errormsg' => 'Es muss mindestens eine Wehr angegeben werden',
+		   'level' => 'array'
+		);
+		$check_list [] = array(
+		   'field_name' => 'cars' ,
+		   'expected_value' => 'exists' ,
+		   'errormsg' => 'Es muss mindestens ein Fahrzeug angegeben werden',
+		   'level' => 'array'
+		);
+		$check_list [] = array(
+		   'field_name' => 'einsatzstart_date' ,
+		   'expected_value' => '' ,
+		   'errormsg' => 'Es muss ein Startdatum eingegeben werden',
+		   'level' => '2'
+		);
+		$check_list [] = array(
+		   'field_name' => 'einsatzstart_time' ,
+		   'expected_value' => '' ,
+		   'errormsg' => 'Es muss ein Startzeit eingegeben werden',
+		   'level' => '2'
+		);
+		$check_list [] = array(
+		   'field_name' => 'eigenekraefte' ,
+		   'expected_value' => '' ,
+		   'errormsg' => 'Es muss die Anzahl der eigenen Kräfte eingegeben werden',
+		   'level' => '0'
+		);
+
+		$returnmsg = ":yes";
+		
+		foreach ($check_list as $check) {
+			if($check['expected_value']=='') {
+				if($_POST[$check['field_name']]=="") {
+					$returnmsg=$returnmsg.":".$check['field_name']."|".$check['errormsg']."|".$check['level'];
+				}
+			} else {
+				if(!isset($_POST[$check['field_name']])) {
+					$returnmsg=$returnmsg.":".$check['field_name']."|".$check['errormsg']."|".$check['level'];
+				}
+			}
+		}
+
+		// Special Logiv Check
+		if($_POST["einsatzdauer"]=="") {
+			if($_POST["einsatzende_date"]=="") {
+				$returnmsg=$returnmsg.":einsatzende_date|Bitte geben Sie ein Enddatum oder die Einsatzdauer ein|2";
+			}
+			if($_POST["einsatzende_time"]=="") {
+				$returnmsg=$returnmsg.":einsatzende_time|Bitte geben Sie eine Endzeit oder die Einsatzdauer ein|2";
+			}
+			
+			if($_POST["einsatzende_date"]!="") {
+				if($_POST["einsatzende_time"]!="") {
+					$date_start = new DateTime($_POST["einsatzstart_date"]." ".$_POST["einsatzstart_time"]);
+					$date_end = new DateTime($_POST["einsatzende_date"]." ".$_POST["einsatzende_time"]);
+					$tstamp_s = $date_start->getTimestamp();
+					$tstamp_e = $date_end->getTimestamp();
+					if($tstamp_s>=$tstamp_e) {
+						$returnmsg=$returnmsg.":einsatzende_time|Ihr Endzeitpunkt liegt hinter dem Startzeitpunkt|2";
+					}
+				}
+			}
+		}		
+
+		return substr($returnmsg,1,strlen($returnmsg)-1);
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Einen Einsatz nicht im Frontend anzeigen
+	|--------------------------------------------------------------------------
 	*/
 	public function einsatz_publish() {
 

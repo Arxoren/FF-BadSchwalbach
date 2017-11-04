@@ -16,7 +16,7 @@ if($content["einsaetze"]["einsatzID"]=="") { $modus="new"; } else { $modus="edit
 	<div id="admin_pageheadline" class="admin_pageheadline">
 
 		<h1 class="admin"><?php echo $content['page_headline']; ?></h1>
-		<input type="button" class="admin_button" value="Speichern" id="js-send-form" /> 
+		<input type="button" class="admin_button" value="Speichern" id="js-send-form" checkform="yes" /> 
 		<hr class="clear" />
 
 	</div>
@@ -127,7 +127,7 @@ if($content["einsaetze"]["einsatzID"]=="") { $modus="new"; } else { $modus="edit
         </p>
     </div>
     <div class="edit_form">
-        <p class="admin_label">Alarmierte Feuerwehren</p>
+        <p class="admin_label" data-group="wehren">Alarmierte Feuerwehren</p>
         <div class="admin_table admin_table_list">    
             <?php 
 
@@ -155,7 +155,7 @@ if($content["einsaetze"]["einsatzID"]=="") { $modus="new"; } else { $modus="edit
         </div>      
     </div>
     <div class="edit_form formblock car_selection">
-        <p class="admin_label">Eingesetzte Fahrzeuge <span class="helptext">- Nur die Fahrzeuge der eingesetzten Wehren</span></p>
+        <p class="admin_label" data-group="cars">Eingesetzte Fahrzeuge <span class="helptext">- Nur die Fahrzeuge der eingesetzten Wehren</span></p>
         <?php
 
         $akt_wehrID=0;

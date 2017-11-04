@@ -170,7 +170,7 @@ class model_adminnews extends CI_Model {
 					//--- Inhalte bereinigen und Zeilenumbrüche beibehalten
 					$content = strip_editor_tags($content);
 
-					$content_string = $content_string.'['.$stringname[$z].'::'.$content.']';
+					$content_string = $content_string.'{'.$stringname[$z].'::'.$content.'}';
 					$z++;
 				}
 			} else {
@@ -249,7 +249,6 @@ class model_adminnews extends CI_Model {
 		basic_writelog($log_action,'pageeditor - module delete', 2);
 
 		$GLOBALS['globalmessage'] = "success:Änderungen wurden gespeichert";
-
 	}
 
 	public function news_module_delete($delete_id) {
@@ -354,9 +353,16 @@ class model_adminnews extends CI_Model {
 			$var['aktfilter_wehren'] = $_POST["filter_wehren"];
 		}
 		$query = $this->db->query($sql);
-		$aktstages = $query->row_array();
-		$aktstages = explode(":", $aktstages["value"]);
+		$akt_stages = $query->row_array();
+		$aktstages = explode(":", $akt_stages["value"]);
 		$var['stages'] = array();
+
+		if($akt_stages["value"]=="") {
+			$sql_fallback = 'SELECT * FROM ffwbs_stages WHERE protected="1" AND newsstage="1" LIMIT 1';
+			$query_fallback = $this->db->query($sql_fallback);
+			$standard = $query_fallback->row_array();
+			$this->db->simple_query('UPDATE ffwbs_zuordnung_var SET value="'.$standard["stageID"].'" WHERE varID="'.$akt_stages["varID"].'"');
+		}
 
 		foreach($aktstages as $stage) {
 			$sql = 'SELECT * FROM ffwbs_stages WHERE stageID="'.$stage.'"';
@@ -366,7 +372,7 @@ class model_adminnews extends CI_Model {
 		}
 
 		//--- Alle Stages abrufen
-		$sql = 'SELECT * FROM ffwbs_stages WHERE newsstage="1"';
+		$sql = 'SELECT * FROM ffwbs_stages WHERE newsstage="1" AND freeuse="1" OR (newsstage="1" AND freeuse="0" AND wehrID="'.$var['aktfilter_wehren'].'")';
 		$query = $this->db->query($sql);
 		$var['allstages'] = $query->result_array();
 
@@ -381,7 +387,289 @@ class model_adminnews extends CI_Model {
 		return $var;
 	}
 
+	public function news_stageedit() {
+
+		$var['page_headline'] = "News-Bühnen bearbeiten";
+		$var['page_btn_addnew'] = "Speichern";
+		$var['feuerwehren'] = basicffw_get_wehrlist();
 		
+		if(isset($_GET["stageID"]) && $_GET["stageID"]!="newstage") {
+			$query = $this->db->query('SELECT * FROM ffwbs_stages WHERE stageID="'.$_GET["stageID"].'" LIMIT 1');
+			$var['stages'] = $query->row_array();
+		} else {
+			$var['stages']  = array(
+			   'stageID' => ''
+			);
+		}
+
+		return $var;
+
+	}
+
+	public function news_stagesave() {
+	
+		if(!isset($_POST["freeuse"])) {
+			$var_freeuse = 0;
+		} else {
+			$var_freeuse = $_POST["freeuse"];
+		}
+		$data_stage = array(
+		   'headline' => ''.$_POST["headline"].'' ,
+		   'subline' => ''.$_POST["subline"].'' ,
+		   'link' => ''.$_POST["link"].'' ,
+		   'color' => ''.$_POST["color"].'' ,
+		   'freeuse' => ''.$var_freeuse.'' ,
+		   'newsstage' => '1' ,
+		   'wehrID' => ''.$_POST["sort"].'',
+		);
+
+		if($_POST["editID"]=="") {
+			/*
+			|--------------------------------------------------------------------------
+			|  Neuen Eintrag speichern
+			|--------------------------------------------------------------------------
+			*/
+			$this->db->insert('stages', $data_stage); 
+			$newest_stageID = $this->db->insert_id();
+
+			for($i=0; $i<count($_FILES["media_file"]["tmp_name"]); $i++) {
+				if($_FILES["media_file"]["tmp_name"][$i]!="") {
+						
+					$CI =& get_instance();
+					$CI->load->model('admin/Model_media');
+					$images = "";
+
+					$filename =  explode(".", $_FILES["media_file"]["name"][$i]);
+					$imagename = $filename[0];
+					$imageDB = $_FILES["media_file"]["name"][$i];
+
+				    // Media Fuktion laden zum Bilder speichern
+				    $file_msg = $CI->Model_media->write_image($i, $imagename);
+				    $file_msg = explode(':', $file_msg);
+
+				    if($file_msg[0]!="error") {
+						// Bilder in die Einsatztabelle schreiben
+						$images_data = array(
+							'image' => $imageDB
+						);
+						$this->db->where('stageID', $newest_stageID);
+						$this->db->update('stages', $images_data);
+					}
+				}
+			}
+
+			$log_action = 'hat eine neue News-Bühne "#'.$newest_stageID.' | '.$_POST["headline"].' hinzugefügt.';
+			basic_writelog($log_action,'news stage - save', 2);
+
+			$msg = "success:Die Bühne wurde angelegt.";
+
+		} else {	
+			/*
+			|--------------------------------------------------------------------------
+			|  Vorhandenen Eintrag bearbeiten
+			|--------------------------------------------------------------------------
+			*/
+			$this->db->where('stageID', $_POST["editID"]);
+			$this->db->update('stages', $data_stage);
+
+			// Bilder abspeichern
+			if($_FILES["media_file"]["tmp_name"][0]!="") {
+						
+				$CI =& get_instance();
+				$CI->load->model('admin/Model_media');
+				$images = "";
+
+				// Test: Wie viele Bilder sind bereits im Beitrag enthalten?
+				$query = $this->db->query('SELECT * FROM ffwbs_stages WHERE stageID="'.$_POST["editID"].'" LIMIT 1');
+				$image_check = $query->row_array();
+				if($image_check['image']!="") {	
+					$filedir = "./frontend/images_cms/stages_big/".$image_check["image"];
+					@unlink ($filedir);
+				}
+
+				for($i=0; $i<count($_FILES["media_file"]["tmp_name"]); $i++) {
+					if($_FILES["media_file"]["tmp_name"][$i]!="") {
+					    $filename =  explode(".", $_FILES["media_file"]["name"][$i]);
+					    $imagename = $filename[0];
+					    $imageDB = $_FILES["media_file"]["name"][$i];
+						   		
+				   		// Media Fuktion laden zum Bilder speichern
+					    $file_msg = $CI->Model_media->write_image($i, $imagename);
+
+					    $file_msg = explode(':', $file_msg);
+					    if($file_msg[0]!="error") {
+							// Bild in der DB abspeichern
+							$images_data = array(
+								'image' => $imageDB
+							);
+							$this->db->where('stageID', $_POST["editID"]);
+							$this->db->update('stages', $images_data);
+						}
+					}
+				}
+			}
+
+			$log_action = 'hat die News-Bühne "#'.$_POST["editID"].' | '.$_POST["headline"].' bearbeitet.';
+			basic_writelog($log_action,'news stage - save', 2);
+
+			$msg = "success:Die News-Bühne wurde bearbeitet.";
+			$GLOBALS['globalmessage'] = $msg;
+
+		}
+
+		$GLOBALS['globalmessage'] = $msg;
+
+		//$var = $this->news_stageliste();
+		//return $var;
+
+	}
+
+	public function news_setstageonline() {
+
+		$aktstages = $this->get_aktstages($_GET["sort"]);
+		$new_stages = explode(":", $aktstages["value"]);
+	
+		if($_GET["action"]=="add") {
+			//--- ADD Stage
+			array_unshift($new_stages, $_GET["stageID"]);
+		} else {
+			//--- REMOVE Stage
+			$key = array_search($_GET["stageID"], $new_stages);
+			if ($key!==false) {
+				unset($new_stages[$key]);
+			}
+		}
+		$new_value = implode(":", $new_stages);
+
+		$this->db->simple_query('UPDATE ffwbs_zuordnung_var SET value="'.$new_value.'" WHERE varID="'.$aktstages["varID"].'"');
+		
+		//--- LOG
+		$wehr = basicffw_get_vereindetails_singlevar($_GET["sort"], "ort");
+		if($_GET["action"]=="add") {
+			$log_action = 'hat die News-Bühne "#'.$_GET["stageID"].'" für "'.$wehr.'" ONLINE geschaltet.';
+		} else {	
+			$log_action = 'hat die News-Bühne "#'.$_GET["stageID"].'" für "'.$wehr.'" OFFLINE geschaltet.';
+		}
+		basic_writelog($log_action,'news stage - publish', 2);
+	}
+
+	public function news_stagepos() {
+
+		$aktstages = $this->get_aktstages($_GET["sort"]);
+		$akt_stages = explode(":", $aktstages["value"]);
+		$new_stages = array();
+		
+		$a = $akt_stages[$_GET["pos"]];
+		if($_GET['direction']=="up") {
+			if(($_GET["pos"]-1)>=0) {
+				$index = $_GET["pos"]-1;
+				$index_b = $_GET["pos"];
+				$b = $akt_stages[$_GET["pos"]-1];
+				$changetest = "yes";
+			} else {
+				$changetest = "no";
+			}
+		} else {
+			if(count($akt_stages)>($_GET["pos"]+1)) {
+				$index = $_GET["pos"]+1;
+				$index_b = $_GET["pos"];
+				$b = $akt_stages[$_GET["pos"]+1];
+				$changetest = "yes";
+			} else {
+				$changetest = "no";
+			}
+		}
+
+		if($changetest=="yes") {
+			for($i=0; $i<count($akt_stages); $i++) {
+				if($index==$i) {
+					$new_stages[$index] = $a;
+					$new_stages[$index_b] = $b;
+					if($_GET['direction']=="up") { 
+						$i++;
+					}
+				} else {
+					$new_stages[$i] = $akt_stages[$i];
+				}
+			}
+			$new_value = implode(":", $new_stages);
+			$this->db->simple_query('UPDATE ffwbs_zuordnung_var SET value="'.$new_value.'" WHERE varID="'.$aktstages["varID"].'"');
+
+			//--- LOG
+			$wehr = basicffw_get_vereindetails_singlevar($_GET["sort"], "ort");
+			if($_GET["direction"]=="up") {
+				$log_action = 'hat die News-Bühne "#'.$_GET["stageID"].'" für "'.$wehr.'" nach oben verschoben.';
+			} else {	
+				$log_action = 'hat die News-Bühne "#'.$_GET["stageID"].'" für "'.$wehr.'" nach unten verschoben.';
+			}
+			basic_writelog($log_action,'news stage - publish', 2);
+		} else {
+			echo "NO";
+		}
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Einen Einsatz löschen
+	|--------------------------------------------------------------------------
+	*/
+	public function news_stagedelete() {
+
+		$query = $this->db->query('SELECT * FROM ffwbs_stages WHERE stageID="'.$_GET["id"].'" LIMIT 1');
+		$result_count = $this->db->affected_rows();
+		if($result_count==1) {
+			$stage = $query->row_array();
+			
+			// Newsbild löschen
+			if($stage["image"]!="") {
+				$filedir = "./frontend/images_cms/stages_big/".$stage["image"]."";
+				if(file_exists($filedir)) {
+					if(unlink($filedir)) {
+						$control = "SUCCSESS";
+					}
+				}
+			}
+
+			$sql = 'SELECT * FROM ffwbs_zuordnung_var WHERE varname="newsstage"';
+			$query = $this->db->query($sql);
+			$wehrstages = $query->result_array();	
+			
+			foreach($wehrstages as $stages) {
+				$akt_stages = explode(":", $stages["value"]);
+				$key = array_search($_GET["id"], $akt_stages);
+				if ($key!==false) {	
+					unset($akt_stages[$key]);
+				}
+				$new_value = implode(":", $akt_stages);
+				$this->db->simple_query('UPDATE ffwbs_zuordnung_var SET value="'.$new_value.'" WHERE varID="'.$stages["varID"].'"');
+			}		
+
+			$query = $this->db->query('DELETE FROM ffwbs_stages WHERE stageID="'.$stage["stageID"].'"');
+
+			$log_action = 'hat die Startseitenbühne "#'.$_GET["id"].' | '.$stage["headline"].'" gelöscht.';
+			basic_writelog($log_action,'news stage - delete', 2);
+
+			$GLOBALS['globalmessage'] = "success:Die Bühne '#".$_GET["id"]."' wurde gelöscht";
+		} else {
+			$GLOBALS['globalmessage'] = "error:Die Bühne konnte '#".$_GET["id"]."' nicht gelöscht werden - Bitte wende dich an den Admin";
+		}
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| STAGE HELPER
+	|--------------------------------------------------------------------------
+	*/
+
+	function get_aktstages($wehrID) {
+		$sql = 'SELECT * FROM ffwbs_zuordnung_var WHERE varname="newsstage" AND wehrID="'.$wehrID.'"';
+		$query = $this->db->query($sql);
+		return $query->row_array();
+	}
+
+
+
+
 }
 
 ?>

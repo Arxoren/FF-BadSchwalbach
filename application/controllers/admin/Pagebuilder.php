@@ -374,10 +374,10 @@ class pagebuilder extends CI_Controller {
 	}
 
 	public function get_adminmoduleform_ajax() {
-		
+				
 		/*
-		$_POST["contentmoduleID"]=8;
-		$_POST["moduleID"]="adminnews";
+		$_POST["contentmoduleID"]=10;
+		$_POST["moduleID"]="downloadfiles";
 		*/
 
 		$this->load->model('admin/Model_pageeditor');
@@ -412,6 +412,20 @@ class pagebuilder extends CI_Controller {
 		} else {
 			$mdata[$module["function"]] = $this->$getmodel->$getmethode($mdata['module_data']);
 		}
+
+		$response = $this->load->view($adminfunction, $mdata, TRUE);
+		$this->output->set_output($response); 
+
+	}
+
+public function get_admineditorfunctions_ajax() {
+				
+		/*
+		$_POST["contentmoduleID"]=10;
+		$_POST["moduleID"]="downloadfiles";
+		*/
+		echo $adminfunction = 'admin/m_editor_'.$_POST["formtype"];
+		$mdata = array();
 
 		$response = $this->load->view($adminfunction, $mdata, TRUE);
 		$this->output->set_output($response); 
@@ -455,6 +469,15 @@ class pagebuilder extends CI_Controller {
 		$mdata['imagelist'] = $this->Model_media->media_get_images($_GET["path"]);
 		
 		$response = $this->load->view('admin/m_imageupload', $mdata, TRUE);
+		
+		//echo $response;
+		$this->output->set_output($response);
+	}
+
+	public function checkform_ajax() {
+
+		$this->load->model('admin/Model_einsatz');
+		$response = $this->Model_einsatz->checkform();
 		
 		//echo $response;
 		$this->output->set_output($response);

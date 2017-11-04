@@ -8,7 +8,7 @@ class model_teaser extends CI_Model {
 			$content = array();
 
 			for($i=0; $i<count($treffer); $i++) {
-				$replace_array = array("[", "]");
+				$replace_array = array("{", "}");
 				$treffer[$i][0]=str_replace($replace_array, "", $treffer[$i][0]);
 				$content_items=explode("|", $treffer[$i][0]);
 				
