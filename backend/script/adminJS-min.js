@@ -4,13 +4,14 @@
 	var icon_object = '';
 	var editor_selRange;	
 	
+	/*
 	var g_basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/admin/'
 	var basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/'
-		
-	/*
+	*/	
+	
 	var g_basepath = 'http://www.feuerwehr-badschwalbach.de/admin/'
 	var basepath = 'http://www.feuerwehr-badschwalbach.de/'
-	*/
+	
 
 	$(document).ready(function() {
 
@@ -173,6 +174,7 @@
 				if(msg=="yes") {
 					$( "#admin_form" ).submit();
 				} else {
+					
 					error = msg.split(":");
 					for (i = 0; i < error.length; i++) { 
 						error_details = error[i].split("|");
@@ -1202,12 +1204,9 @@
 	//  Text-Editor
 	/*--------------------------------------------------------------*/
 	
-	$('.js_admin_editorbutton').on('mousedown', 
-	    /** @param {!jQuery.Event} event */ 
-	    function(event) {
-	        event.preventDefault();
-	    }
-	);
+	$(document).on("mousedown", ".js_admin_editorbutton", function(e) {
+        event.preventDefault();
+    });
 	$(document).on("click", ".js_admin_insertlink", function(e) {
 		e.preventDefault();
 

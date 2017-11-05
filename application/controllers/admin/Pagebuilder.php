@@ -283,7 +283,7 @@ class pagebuilder extends CI_Controller {
 		$data = $this->Model_pageeditor->page_get_newmoduldata();
 
 		$data['module_data'] = $data['initialcontent'];
-		$data['pagemoduleID'] = $data['layout'];
+		$data['pagemoduleID'] = $data['model'];
 		$data['module_name'] = "";
 
 		if($data['model']=="editorial") {	

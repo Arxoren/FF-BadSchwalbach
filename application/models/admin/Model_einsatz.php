@@ -412,7 +412,9 @@ class model_einsatz extends CI_Model {
 			}
 		}
 
-		// Special Logiv Check
+
+		// Special Login Check
+		/*
 		if($_POST["einsatzdauer"]=="") {
 			if($_POST["einsatzende_date"]=="") {
 				$returnmsg=$returnmsg.":einsatzende_date|Bitte geben Sie ein Enddatum oder die Einsatzdauer ein|2";
@@ -432,8 +434,8 @@ class model_einsatz extends CI_Model {
 					}
 				}
 			}
-		}		
-
+		}
+		*/		
 		return substr($returnmsg,1,strlen($returnmsg)-1);
 	}
 
