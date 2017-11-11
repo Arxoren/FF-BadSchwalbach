@@ -272,9 +272,12 @@
 			$content = str_replace('<i>', '[i]', str_replace('</i>', '[/i]', $content));
 			$content = str_replace('<u>', '[u]', str_replace('</i>', '[/u]', $content));
 
-			$test=preg_match_all('#\<a href=\"(.*?)\" target=\"(.*?)\"\>(.*?)\<\/a\>#si', $content, $treffer, PREG_SET_ORDER);
+			$test=preg_match_all('#\<a href=\"(.*?)\" class="textlink" target=\"(.*?)\"\>(.*?)\<\/a\>#si', $content, $treffer, PREG_SET_ORDER);
 			$i = 0;
 			foreach($treffer as $string) {
+				
+				//echo print_r($string);
+
 				$textvar = '[url='.$string[1].'='.$string[2].']'.$string[3].'[/url]';
 				$content=str_replace($string[0], $textvar, $content);
 			}

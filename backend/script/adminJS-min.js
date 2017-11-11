@@ -4,14 +4,14 @@
 	var icon_object = '';
 	var editor_selRange;	
 	
+	
 	/*
 	var g_basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/admin/'
 	var basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/Relaunch_2015/_web/'
-	*/	
+	*/
 	
 	var g_basepath = 'http://www.feuerwehr-badschwalbach.de/admin/'
 	var basepath = 'http://www.feuerwehr-badschwalbach.de/'
-	
 
 	$(document).ready(function() {
 
@@ -1215,28 +1215,34 @@
 		editor_selRange = saveSelection();
 
 		if(selObj.baseNode.parentNode.tagName === 'A') {
-			stripBBCode(selObj);
+			var url = selObj.baseNode.parentNode.getAttribute('href');
+			var target = selObj.baseNode.parentNode.getAttribute('target');
 		} else {
-			$('#js_admin_lightbox').removeClass('admin_hide');
-			$(document.body).addClass('admin_noscroll');
-
-			//--- Modul per AJAX laden
-			$.ajax({
-				type:'POST',
-				url: g_basepath+'Load_editorfunctions',
-				data: { 
-					formtype: 'link'
-				},
-				success: function(msg) { 
-					$('#js_admin_lightboxcontentarea').append(msg); 
-					$('.js_admin_linkeditor_text').val(selectedText);
-					//alert("Selected Text: "+selectedText);
-				},
-				error: function() { 
-					alert("Sorry - jQuerry could not call the PHP function."); },
-				complete: function(){ },
-			});
+			var url = ''; 
+			var target = '';	
 		}
+		
+		$('#js_admin_lightbox').removeClass('admin_hide');
+		$(document.body).addClass('admin_noscroll');
+
+		//--- Modul per AJAX laden
+		$.ajax({
+			type:'POST',
+			url: g_basepath+'Load_editorfunctions',
+			data: { 
+				formtype: 'link',
+				link_url: url,
+				link_target: target
+			},
+			success: function(msg) { 
+				$('#js_admin_lightboxcontentarea').append(msg); 
+				$('.js_admin_linkeditor_text').val(selectedText);
+				//alert("Selected Text: "+selectedText);
+			},
+			error: function() { 
+				alert("Sorry - jQuerry could not call the PHP function."); },
+			complete: function(){ },
+		});
 	});
 	$(document).on("click", "#js_admin_linkeditor_save", function(e) {
 		e.preventDefault();
@@ -1248,10 +1254,18 @@
 		var text = $('.js_admin_linkeditor_text').val();
 		
 		if(link!="" && text!="") {
-			var text = '<a href="'+link+'" target="'+target+'">'+text+'</a> ';
-			insertTextAtCursor(text);
+			var text = '<a href="'+link+'" class="textlink" target="'+target+'">'+text+'</a>';
+			//alert(text);
+			insertTextAtCursor(text, 'link');
 			close_module_editlightbox();
 		}
+	});
+	$(document).on("click", "#js_admin_linkeditor_removelink", function(e) {
+		e.preventDefault();
+		restoreSelection(editor_selRange);
+		var selObj = window.getSelection();
+		stripBBCode(selObj);
+		close_module_editlightbox();
 	});		
 	$(document).on("click", ".js_admin_insertbold", function(e) {
 		e.preventDefault();
@@ -1351,16 +1365,24 @@
 	        }
 	    }
 	}
-	function insertTextAtCursor(text) {
+	function insertTextAtCursor(text, type) {
 	    var sel, range, html;
 	    if (window.getSelection) {
 	        sel = window.getSelection();
 	        if (sel.getRangeAt && sel.rangeCount) {
+	        	check = sel.baseNode.parentNode.tagName;
 	            range = sel.getRangeAt(0);
+	            // remove the old content
 	            range.deleteContents();
+	            // if a link is already there - remove it
+		        if(type === 'link' && check==='A') {
+		            var node = $(range.commonAncestorContainer);
+	        		node.unwrap();
+	        	}
 	            var textNode = text; 
-	            range.insertNode(range.createContextualFragment(textNode));
-	            sel.removeAllRanges();
+	           	range.insertNode(range.createContextualFragment(textNode));
+   	    		
+   	    		sel.removeAllRanges();
 	        }
 	    } else if (document.selection && document.selection.createRange) {
 	        range = document.selection.createRange();
