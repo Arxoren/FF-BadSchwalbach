@@ -80,7 +80,7 @@ class model_adminnews extends CI_Model {
 		   'model_type' => 'editorial' ,
 		   'model_func' => '' ,
 		   'layout' => 'text' ,
-		   'module_data' => '[text::Ein neues Modul.]' ,
+		   'module_data' => '{text::Ein neues Modul.}' ,
 		   'subpage_module' => '0' ,
 		   'online' => '1' ,
 		   'sort' => '0'
