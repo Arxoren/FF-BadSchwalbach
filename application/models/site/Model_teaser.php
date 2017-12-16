@@ -4,7 +4,7 @@ class model_teaser extends CI_Model {
 
 		public function get_teaser_list($content) {
 
-			$test=preg_match_all("#\[(.*?)]#si", $content, $treffer, PREG_SET_ORDER);
+			$test=preg_match_all("#\{(.*?)}#si", $content, $treffer, PREG_SET_ORDER);
 			$content = array();
 
 			for($i=0; $i<count($treffer); $i++) {

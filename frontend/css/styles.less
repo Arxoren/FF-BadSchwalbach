@@ -77,13 +77,29 @@ p.button {
 		color: #FFF;
 		border-color: #FFF;
 	}
-	a:hover {
-		color: #FFF;
-		background-color: @color_text;
-	}
 	a.red:hover {
 		color: @color_red_light;
 		background-color: #FFF;
+	}
+	.swhite {
+		color: #FFF;
+		border-color: #FFF;
+	}
+	a.swhite:hover {
+		color: @color_red_light;
+		background-color: #FFF;
+	}
+	.sblack {
+		color: #000;
+		border-color: #000;
+	}
+	a.sblack:hover {
+		color: #FFF;
+		background-color: #000;
+	}
+	a:hover {
+		color: #FFF;
+		background-color: @color_text;
 	}
 }
 
@@ -857,6 +873,13 @@ nav .meta, nav .cityselect { display: none; }
 		text-align: center;
 		font-size: 44px;
 		line-height: 1.1;
+
+		.white {
+			color: #FFF;
+		}
+		.black {
+			color: #0000;
+		}
 	}
 	p {
 		width: 60%;

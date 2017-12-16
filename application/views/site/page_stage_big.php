@@ -24,13 +24,13 @@
             		echo basic_get_breadcrumppath($this->uri->segment_array(), $this->uri->rsegment_array(), base_url());
             	}
                 if($stage_content["headline"]!="") {
-                    echo'<h1>'.$stage_content["headline"].'</h1>';
+                    echo'<h1 class="'.$stage_content["color"].'">'.$stage_content["headline"].'</h1>';
                 }	
                 if($stage_content["subline"]!="") {
-                    echo'<p class="quote">'.$stage_content["subline"].'</p>';
+                    echo'<p class="quote '.$stage_content["color"].'">'.$stage_content["subline"].'</p>';
                 }
                 if($stage_content["link"]!="") {
-                    echo'<p class="button"><a href="'.$stage_content["link"].'" class="red">Bericht lesen</a></p>';
+                    echo'<p class="button"><a href="'.$stage_content["link"].'" class="s'.$stage_content["color"].'">Bericht lesen</a></p>';
                 }
             echo'
             </div>

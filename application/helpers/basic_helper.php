@@ -390,3 +390,52 @@
 			return $contentmodule['contentmoduleID'];
 
 		}
+
+
+		/*
+		|--------------------------------------------------------------------------
+		| Prefilled Module Einstellungen ermitteln
+		|--------------------------------------------------------------------------
+		|
+		| Ermittelt die Parameter um "Prefilled" Layout modulle direkt zu speichern.
+		| Liefert ein array zurück dass direkt gespeichert werden kann. 
+		|
+		*/
+
+		function basic_get_prefilledModule($name, $pageID, $sort, $type) {
+			
+			$ci=& get_instance();
+			$ci->load->database(); 
+
+			$sqlstr_page = 'SELECT * FROM ffwbs_contentmodules WHERE name="'.$name.'"';
+			$query_page = $ci->db->query($sqlstr_page);
+			$contentmodule = $query_page->row_array();
+
+			if($type=="page") {
+				$data_new_module = array(
+				   'pageID' => ''.$pageID.'' ,
+				   'contentmoduleID' => ''.$contentmodule["contentmoduleID"].'' ,
+				   'model_type' => ''.$contentmodule["model"].'' ,
+				   'model_func' => ''.$contentmodule["function"].'' ,
+				   'layout' => ''.$contentmodule["layout"].'' ,
+				   'module_data' => ''.$contentmodule["initialcontent"].'' ,
+				   'subpage_module' => '0' ,
+				   'sort' => ''.$sort.'' ,
+				   'online' => '1'
+				);
+			} else {
+				$data_new_module = array(
+				   'newsID' => ''.$pageID.'' ,
+				   'contentmoduleID' => ''.$contentmodule["contentmoduleID"].'' ,
+				   'model_type' => ''.$contentmodule["model"].'' ,
+				   'model_func' => ''.$contentmodule["function"].'' ,
+				   'layout' => ''.$contentmodule["layout"].'' ,
+				   'module_data' => ''.$contentmodule["initialcontent"].'' ,
+				   'subpage_module' => '0' ,
+				   'sort' => ''.$sort.'' ,
+				   'online' => '1'
+				);
+			}
+
+			return $data_new_module;
+		}

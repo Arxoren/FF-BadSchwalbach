@@ -74,17 +74,7 @@ class model_adminnews extends CI_Model {
 		$newest_newsID = $this->db->insert_id();
 
 		
-		$data_new_module = array(
-		   'newsID' => ''.$newest_newsID.'' ,
-		   'contentmoduleID' => '3' ,
-		   'model_type' => 'editorial' ,
-		   'model_func' => '' ,
-		   'layout' => 'text' ,
-		   'module_data' => '{text::Ein neues Modul.}' ,
-		   'subpage_module' => '0' ,
-		   'online' => '1' ,
-		   'sort' => '0'
-		);
+		$data_new_module = basic_get_prefilledModule("Text-Block", $newest_newsID, 0, "news");
 		$this->db->insert('news_modules', $data_new_module);
 
 		$log_action = 'hat eine neue News angelegt.';

@@ -527,29 +527,10 @@ class model_pageeditor extends CI_Model {
 		$newest_pageID = $this->db->insert_id();
 
 		
-		$data_new_module = array(
-		   'pageID' => ''.$newest_pageID.'' ,
-		   'model_type' => 'stage' ,
-		   'model_func' => 'smallstage_image' ,
-		   'layout' => 'stage_small' ,
-		   'module_data' => '' ,
-		   'subpage_module' => '0' ,
-		   'sort' => '0' ,
-		   'online' => '1'
-		);
+		$data_new_module = basic_get_prefilledModule("Small-Stage", $newest_pageID, 0, "page");
 		$this->db->insert('page_modules', $data_new_module);
 
-		$data_new_module = array(
-		   'pageID' => ''.$newest_pageID.'' ,
-		   'contentmoduleID' => '3' ,
-		   'model_type' => 'editorial' ,
-		   'model_func' => '' ,
-		   'layout' => 'text' ,
-		   'module_data' => '[text::Fügen Sie neue Module ein.]' ,
-		   'subpage_module' => '0' ,
-		   'sort' => '0' ,
-		   'online' => '1'
-		);
+		$data_new_module = basic_get_prefilledModule("Text-Block", $newest_pageID, 1, "page");
 		$this->db->insert('page_modules', $data_new_module);
 
 		$log_action = 'hat eine neue Seite angelegt.';
