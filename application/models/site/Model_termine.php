@@ -5,10 +5,11 @@ class model_termine extends CI_Model {
 	public function get_termine() {
 
 		if($GLOBALS['location']=='all') {	
-			$query = $this->db->query('SELECT * FROM ffwbs_termine WHERE date_anfang>="'.basic_get_date().' '.basic_get_time().'" AND online="1" ORDER BY date_anfang ASC');
+			$sql='SELECT * FROM ffwbs_termine WHERE date_anfang>="'.basic_get_date().' '.basic_get_time().'" AND online="1" ORDER BY date_anfang ASC';
 		} else {
-			$query = $this->db->query('SELECT * FROM ffwbs_termine WHERE wehrID="'.$GLOBALS['location'].'" OR wehrID="0" AND date_anfang>="'.basic_get_date().' '.basic_get_time().'" AND online="1" ORDER BY date_anfang ASC');
+			$sql='SELECT * FROM ffwbs_termine WHERE (wehrID="'.$GLOBALS['location'].'" OR wehrID="0") AND date_anfang>="'.basic_get_date().' '.basic_get_time().'" AND online="1" ORDER BY date_anfang ASC';
 		}
+		$query = $this->db->query($sql);
 		$termine = $query->result_array();	
 
 		for($i=0; $i<count($termine); $i++) {
