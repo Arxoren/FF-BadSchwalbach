@@ -276,8 +276,6 @@
 			$i = 0;
 			foreach($treffer as $string) {
 				
-				//echo print_r($string);
-
 				$textvar = '[url='.$string[1].'='.$string[2].']'.$string[3].'[/url]';
 				$content=str_replace($string[0], $textvar, $content);
 			}
@@ -307,12 +305,16 @@
 				$i = 0;
 
 				foreach($treffer as $string) {
-					if(substr($string[1], 0, 7)!="http://") {
-						$link = "http://".$string[1];
+					if(substr($string[1], 0, 11)=="javascript:") {
+						$textvar = '<a href="'.$string[1].'" class="textlink">'.$string[3].'</a>';
 					} else {
-						$link = $string[1];
+						if(substr($string[1], 0, 7)!="http://" && substr($string[1], 0, 8)!="https://" ) {
+							$link = "http://".$string[1];
+						} else {
+							$link = $string[1];
+						}
+						$textvar = '<a href="'.$link.'" class="textlink" target="'.$string[2].'">'.$string[3].'</a>';
 					}
-					$textvar = '<a href="'.$link.'" class="textlink" target="'.$string[2].'">'.$string[3].'</a>';
 					$content=str_replace($string[0], $textvar, $content);
 				}
 				//---------------------------
