@@ -34,6 +34,9 @@ if(!isset($_GET["op"])) {
 		}
 		if($pagemoduleID=="download_filelist" || $pagemoduleID=="files") {
 		    echo'<div class="admin_layoutmodul_panel_edit admin_hide" data-moduletype="'.$_GET["op"].'" data-contentmoduleid="'.$contentmoduleID.'" data-moduleid="'.$moduleID.'"></div>';
+		}
+		if($pagemoduleID=="teaser") {
+		    echo'<div class="admin_layoutmodul_panel_addnewteaser admin_hide" data-moduletype="'.$_GET["op"].'" data-contentmoduleid="'.$contentmoduleID.'" data-moduleid="'.$moduleID.'"></div>';
 		}	
 	?>
     <input type="hidden" name="content_<?php echo $moduleID; ?>" value="<?php echo $module_data; ?>" />

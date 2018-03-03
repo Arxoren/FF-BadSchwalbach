@@ -16,6 +16,7 @@ class model_teaser extends CI_Model {
 				$img_array = $query->row_array();
 
 				$content[$i]["image"]=$img_array["folder"].$img_array["name"].'.'.$img_array["format"];
+				$content[$i]["adminimgID"]=$content_items[0];
 				$content[$i]["intro"]=$content_items[1];
 				$content[$i]["text"]=$content_items[2];
 				$content[$i]["link"]=$content_items[3];

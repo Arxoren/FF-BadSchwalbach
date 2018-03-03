@@ -1363,13 +1363,53 @@ div.error {
 	background-color: @color_blue;
 	width: 30px;
 	height: 30px;
-	background-image: url(../images/icon_edit_white.svg);
+	background-image: url(../images/icon_add_white.svg);
 	background-repeat: no-repeat;
-	background-size: 30px;
+	background-size: 20px;
+	background-position: center;
 	z-index: 9999999;
 	position: absolute;
 	margin: 32px 0 0 0px;
 	cursor: pointer;
+}
+.admin_layoutmodul_panel_addnewteaser {
+	background-color: @color_blue;
+	width: 30px;
+	height: 30px;
+	background-image: url(../images/icon_add_white.svg);
+	background-repeat: no-repeat;
+	background-size: 20px;
+	background-position: center;
+	z-index: 9999999;
+	position: absolute;
+	margin: 32px 0 0 0px;
+	cursor: pointer;
+}
+
+
+.admin_teaser_edit {
+	background-color: @color_blue;
+	width: 30px;
+	height: 30px;
+	background-image: url(../images/icon_edit_white.svg);
+	background-repeat: no-repeat;
+	background-size: 30px;
+	z-index: 9999999;
+	margin: 0 0 0 0;
+	cursor: pointer;
+	position: absolute;
+}
+.admin_teaser_delete {
+	background-color: @color_heighlight_orange;
+	width: 30px;
+	height: 30px;
+	background-image: url(../images/icon_delete.png);
+	background-repeat: no-repeat;
+	background-size: 30px;
+	z-index: 9999999;
+	margin: 30px 0 0 0;
+	cursor: pointer;
+	position: absolute;
 }
 
 .admin_hide {
@@ -1502,7 +1542,7 @@ div.error {
 	li {
 		background-color: @color_row_color;
 		margin-bottom: 2px;
-		height: 50px;
+		min-height: 50px;
 	}
 
 	li:nth-child(odd) {
@@ -1670,7 +1710,6 @@ div.error {
 
 	.cell { 
 		padding: 0px 10px; 
-		height: 50px;
 		border-right: 1px solid @color_darkgrey;
 	}
 	.idcell { width: 35px; }
@@ -1966,6 +2005,19 @@ td.editpanel {
 		.helptext {
 			color: black;
 		}
+	}
+	input[type="text"] {
+		width: 400px;
+	    margin: 0 auto;
+		margin-top: 5px;
+	}
+}
+.teaser_form {
+	img {
+		width: 300px;
+	}
+	p {
+		margin: 20px 0 0 0;
 	}
 	input[type="text"] {
 		width: 400px;

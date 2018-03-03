@@ -84,6 +84,7 @@
 		$(this).children('.admin_layoutmodul_panel_delete').removeClass('admin_hide');
 		$(this).children('.admin_layoutmodul_panel_edit').removeClass('admin_hide');
 		$(this).children('.admin_layoutmodul_panel_addnewcell').removeClass('admin_hide');
+		$(this).children('.admin_layoutmodul_panel_addnewteaser').removeClass('admin_hide');
 
 	});
 	$(document).on("mouseleave", '.admin_layoutmodul', function() {
@@ -92,6 +93,7 @@
 		$(this).children('.admin_layoutmodul_panel_delete').addClass('admin_hide');
 		$(this).children('.admin_layoutmodul_panel_edit').addClass('admin_hide');
 		$(this).children('.admin_layoutmodul_panel_addnewcell').addClass('admin_hide');
+		$(this).children('.admin_layoutmodul_panel_addnewteaser').addClass('admin_hide');
 
 	});
 	$(document).on("mouseover", '.cell', function() {
@@ -433,7 +435,16 @@
 
 					if(media_type == "image") {	
 						var i = $('#admin_moduledit_imggal').children().length;
-						$('#admin_moduledit_imggal').append('<li class="js_admin_moduleedit_imagedelete" id="slideshow_'+i+'" data-imgid="'+message[2]+'"><img src="'+basepath+'frontend/images_cms/'+message[5]+message[3]+'.'+message[4]+'" /></li>');
+						if( $("[name=js_admin_fastuploadtarget]").length ) { 
+							if( $("[name=js_admin_fastuploadtarget]").val() == "teaser" ) {
+								var action = 'js_admin_changeteaserimage';
+								var img = basepath+'frontend/images_cms/'+message[5]+message[3]+'.'+message[4];
+								change_teaser_image(message[2], img);
+							}
+						} else {
+							var action = 'js_admin_moduleedit_imagedelete';
+						}
+						$('#admin_moduledit_imggal').append('<li class="'+action+'" id="slideshow_'+i+'" data-imgid="'+message[2]+'"><img src="'+basepath+'frontend/images_cms/'+message[5]+message[3]+'.'+message[4]+'" /></li>');
 					} else {
 						$('#admin_moduledit_imggal').append('<li class="file" id="slideshow_'+i+'" data-fileid="'+message[2]+'" data-name="'+message[3]+'" data-format="'+message[6]+'" data-size"'+message[5]+'" data-icon=""><p><strong>'+message[3]+'</strong></p><p>'+message[6]+' - '+message[5]+'</p><hr class="clear" /></li>');
 					}
@@ -503,18 +514,19 @@
 		   		// "contenteditable" Elemente auslesen
 		   		// ------------------------------------------------------------------------------
 			   	if(moduleType!="table") {
-			   		if($(this).find('[contenteditable="true"]').length > 0) {
-				    	
-						contentdetail = new Array();
+				   	if(moduleType=="teaser") {
+				   		update_teaser_value(modulID);
+				   	} else {
+				   		if($(this).find('[contenteditable="true"]').length > 0) {
+					    	
+							contentdetail = new Array();
 
-				    	$(this).find('[contenteditable="true"]').each(function(){
-							contentdetail.push($(this).html());
-						});
-
-						//alert($(this).attr('data-pagemodule-type'));
-
-				    	$('[name="content_'+modulID+'"]').val(contentdetail.join("::"));  		
-			   		}
+					    	$(this).find('[contenteditable="true"]').each(function(){
+								contentdetail.push($(this).html());
+							});
+					    	$('[name="content_'+modulID+'"]').val(contentdetail.join("::"));  		
+				   		}
+				   	}
 			   	} else {
 			   		contentdetail = new Array();
 
@@ -932,9 +944,106 @@
 	});
 
 	
-	// Special Module edit functions << TABLES >>
+	// Special Module edit functions << TEASER >>
 	/*--------------------------------------------------------------*/
 		
+	$(document).on("click", ".admin_layoutmodul_panel_addnewteaser", function(e) {
+		e.preventDefault();
+
+		var i = $(this).parent().find("ul").children().length;
+		var msg = '<li class="js_admin_teaseredit_'+i+'"><div class="admin_teaser_edit" data-itemID="'+i+'"></div><div class="admin_teaser_delete"></div><input type="hidden" name="js_admin_teaserimage_'+i+'" value="" /><a href="#"><figure><img src="'+basepath+'/frontend/images_cms/placeholder.jpg" alt="intro" /></figure><div class="subhead"><h3>Intro</h3><h2>Text</h2></div></a></li>';
+
+		$(this).parent().find("ul").append(msg);
+		$( ".datafacts" ).sortable({cancel: 'p'});
+	});
+
+	$(document).on("click", ".admin_teaser_edit", function(e) {
+		e.preventDefault();
+
+		$('#js_admin_lightbox').removeClass('admin_hide');
+		$(document.body).addClass('admin_noscroll');
+		icon_object = $(this);
+		var teaserid = $(this).attr('data-itemID');
+
+		//--- Modul per AJAX laden
+		$.ajax({
+			type:'POST',
+			url: g_basepath+'Load_teaseredit',
+			data: { 
+				subline 	: $(this).parent().find('h3').text(),
+				headline 	: $(this).parent().find('h2').text(),
+				url 		: $(this).parent().find('a').attr('href'),
+				image 		: $(this).parent().find('img').attr('src'),
+				imageID 	: $(this).parent().find('[name=js_admin_teaserimage_'+teaserid+']').val(),
+				teaserID 	: teaserid,
+				moduleID 	: $(this).parent().parent().parent().parent().parent().attr('data-module-id')
+			},
+			success: function(msg) { 
+				$('#js_admin_lightboxcontentarea').append(msg); 
+			},
+			error: function() { alert("Sorry - Icons konnten nicht geladen werden"); },
+			complete: function(){
+				
+			},
+		});
+	});
+
+	$(document).on("click", ".js_admin_changeteaserimage", function(e) {
+		var imgid = $(this).attr('data-imgid');
+		var img = $(this).children().attr('src');
+
+		change_teaser_image(imgid, img);
+
+		close_module_settingsform();
+	});
+
+	$(document).on("click", "#js_admin_moduleedit_teaser_update", function(e) {
+		e.preventDefault();
+
+		var moduleID = $(this).attr('data-moduleid');
+		var teaserID = $('.js_teaser_editID').val();		
+		var imageID = $('.js_teaser_imageID').val();		
+		var sub = $('.js_teaser_sub').val();		
+		var head = $('.js_teaser_head').val();		
+		var link = $('.js_teaser_link').val();
+		var img = $('.js_admin_aktteaserimg').attr('src');
+
+		$('.js_adminlayoutmodul_'+moduleID).find('[name=js_admin_teaserimage_'+teaserID+']').val(imageID);
+		$('.js_adminlayoutmodul_'+moduleID).find('.js_admin_teaseredit_'+teaserID).find('img').attr('src', img);
+		$('.js_adminlayoutmodul_'+moduleID).find('.js_admin_teaseredit_'+teaserID).find('a').attr('href', link);
+		$('.js_adminlayoutmodul_'+moduleID).find('.js_admin_teaseredit_'+teaserID).find('h3').text(sub);
+		$('.js_adminlayoutmodul_'+moduleID).find('.js_admin_teaseredit_'+teaserID).find('h2').text(head);
+		
+		update_teaser_value(moduleID);
+		close_module_editlightbox();
+	});
+
+	$(document).on("click", ".admin_teaser_delete", function(e) {
+		var moduleID = $(this).parent().parent().parent().parent().parent().attr('data-module-id');
+		$(this).parent().remove();
+		update_teaser_value(moduleID);
+	});
+
+	
+	function change_teaser_image(imgid, img) {
+		$('.js_teaser_imageID').val(imgid);
+		$('.teaser_form').find('img').attr('src', img);
+	}
+	function update_teaser_value(moduleID) {
+		var string = "";
+		$('.js_adminlayoutmodul_'+moduleID).find('ul').children().each(function() {
+			var imgid = $(this).find('input').val();
+			var sub = $(this).find('h3').text();
+			var head = $(this).find('h2').text();
+			var url = $(this).find('a').attr('href');
+			string = string+'{'+imgid+'|'+sub+'|'+head+'|'+url+'}';
+		});
+		$('[name=content_'+moduleID+']').val(string);
+	}
+
+	// Special Module edit functions << TABLES >>
+	/*--------------------------------------------------------------*/
+
 	$(document).on("click", ".admin_layoutmodul_panel_addnewcell", function(e) {
 		e.preventDefault();
 		

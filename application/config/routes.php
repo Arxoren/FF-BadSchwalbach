@@ -65,6 +65,7 @@ $route['admin/Load_moduleadminform'] = "admin/pagebuilder/get_adminmoduleform_aj
 $route['admin/Load_editorfunctions'] = "admin/pagebuilder/get_admineditorfunctions_ajax";
 $route['admin/Load_folder'] = "admin/pagebuilder/get_folderlist_ajax";
 $route['admin/Load_inserticons'] = "admin/pagebuilder/get_icons";
+$route['admin/Load_teaseredit'] = "admin/pagebuilder/get_teaseredit";
 $route['admin/Load_imageupload'] = "admin/pagebuilder/get_imageupload_ajax";
 $route['admin/Load_checkform'] = "admin/pagebuilder/checkform_ajax";
 $route['admin/imageupload'] = "admin/pagebuilder/imageupload_ajax";

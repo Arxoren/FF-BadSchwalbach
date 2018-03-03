@@ -57,7 +57,14 @@
 						echo'<div class="admin_pagetitle einsatz">';
 							echo'<p>'.$stages['headline'];
 								if($stages['subline']!="") { echo'<br><span>Subline: '.$stages['subline'].'</span>'; } 
-								if($stages['link']!="") { echo'<br><span>Button: '.$stages['link'].'</span>'; }
+								if($stages['link']!="") { 
+									if(strlen($stages['link'])>75) {
+										$link = substr($stages['link'], 0, 75)." ...";
+									} else {
+										$link = $stages['link'];
+									}
+									echo'<br><span>Button: '.$link.'</span>'; 
+								}
 							echo'</p>';
 							echo'<hr class="clear" />';
 						echo'</div></a>';
@@ -129,7 +136,14 @@
 						echo'<div class="admin_pagetitle einsatz">';
 							echo'<p>'.$stages['headline'];
 								if($stages['subline']!="") { echo'<br><span>Subline: '.$stages['subline'].'</span>'; } 
-								if($stages['link']!="") { echo'<br><span>Button: '.$stages['link'].'</span>'; }
+								if($stages['link']!="") { 
+									if(strlen($stages['link'])>75) {
+										$link = substr($stages['link'], 0, 75)." ...";
+									} else {
+										$link = $stages['link'];
+									}
+									echo'<br><span>Button: '.$link.'</span>'; 
+								}
 							echo'</p>';
 							echo'<hr class="clear" />';
 						echo'</div></a>';

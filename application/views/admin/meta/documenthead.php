@@ -35,6 +35,7 @@
             });
 
             $( ".datafacts" ).sortable({cancel: 'p'});
+            $( ".teaser_row > ul" ).sortable();
             
         }
        

@@ -16,7 +16,7 @@
 			$pagelevel=0;
 
 			foreach($content['pages'] as $pages) {
-				
+			
 				if($pages['pagetype']=="folder") {
 					$pageicon = 'icon_folder.png';
 				} else {
@@ -34,7 +34,7 @@
 				}
 
 				if($pagelevel>$pages['level']) {
-					for($x=0; $x<$pagelevel; $x++) {
+					for($x=$pages['level']; $x<$pagelevel; $x++) {
 						echo '</ul>';
 					}
 					$pagelevel = $pages['level'];
@@ -73,5 +73,5 @@
 			}
 
 		?>
-		</ul>
+		</ul class="test_aX">
 	</div>

@@ -499,9 +499,6 @@ public function get_admineditorfunctions_ajax() {
 	}
 	public function save_module_settings() {
 
-		//$_POST["name"]="testname";
-		//$_POST["moduleID"]=9;
-
 		$this->load->model('admin/Model_pageeditor');
 		$response = $this->Model_pageeditor->page_save_module_settings();
 
@@ -509,14 +506,23 @@ public function get_admineditorfunctions_ajax() {
 	}
 	public function get_icons() {
 
-		//$_POST["name"]="testname";
-		//$_POST["moduleID"]=9;
-
 		$this->load->model('admin/Model_pageeditor');
 		$mdata['iconlist'] = $this->Model_pageeditor->page_get_iconlist();
 
 
 		$response = $this->load->view('admin/m_iconlist', $mdata, TRUE);
+		$this->output->set_output($response);
+	}
+	public function get_teaseredit() {
+
+		$path = 'teaser';
+		$_GET["path"] = $path;
+		$_GET["type"] = 'images';
+	
+		$this->load->model('admin/Model_media');
+		$mdata['imagelist'] = $this->Model_media->media_get_images($_GET["path"]);
+
+		$response = $this->load->view('admin/m_teaser_list', $mdata, TRUE);
 		$this->output->set_output($response);
 	}
 
