@@ -1,12 +1,12 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php if($content["navdetails"]["navID"]=="") { $modus="new"; } else { $modus="edit"; } ?>
+<?php if($content["navzuordnung"]["navID"]=="") { $modus="new"; } else { $modus="edit"; } ?>
 
 <div id="admin_contentbox">
     <form name="einsatzedit" id="admin_form" method="post" enctype="multipart/form-data">
         <input type="hidden" name="op" value="pagenavigation_save" />
         <input type="hidden" name="target" value="pagenavigation_showlist" />
-        <input type="hidden" name="editID" value="<?php echo $content["navdetails"]["navID"]; ?>" />
-        <input type="hidden" name="online" value="<?php if($modus!="new") { echo $content["navdetails"]["online"]; } else { echo 0; } ?>" />
+        <input type="hidden" name="editID" value="<?php echo $content["navzuordnung"]["navID"]; ?>" />
+        <input type="hidden" name="online" value="<?php if($modus!="new") { echo $content["navzuordnung"]["online"]; } else { echo 0; } ?>" />
 
 	<div id="admin_pageheadline" class="admin_pageheadline">
 
@@ -20,7 +20,7 @@
 	<div class="edit_form">
         <p>
             <label for="title">Navigations-Label</lable>
-            <input type="text" name="title" value="<?php if($modus!="new") { echo $content["navdetails"]["label"]; } ?>" />
+            <input type="text" name="title" value="<?php if($modus!="new") { echo $content["navzuordnung"]["label"]; } ?>" />
         </p>
         <p>
             <label for="ziel">Ziel</lable>
@@ -28,7 +28,7 @@
                 <option value="notarget">--- Ziel wählen ---</option>
                 <?php   
                     foreach($content["pages"] as $pages) {
-                        if($content["navdetails"]["pagesID"]==$pages['pagesID']) { $check=" selected"; } else { $check=""; }
+                        if($content["navzuordnung"]["pagesID"]==$pages['pagesID']) { $check=" selected"; } else { $check=""; }
                         echo'<option value="'.$pages['pagesID'].'"'.$check.'>'.$pages['page_name'].'</option>';
                     }
                 ?>
@@ -36,14 +36,18 @@
         </p>
         <p>
             <?php 
-                $check=$pathvalue=""; 
-                $hide="admin_hide";
+                $check=$check_autosubcat=$pathvalue=""; 
+                $hide=$hide_autosubcat="admin_hide";
                 
                 if($modus!="new") {
-                    if($content["navdetails"]["auto_subcategories"]=="_blank") { 
+                    if($content["navzuordnung"]["auto_subcategories"]=="_blank") { 
                         $check=" checked";
-                        $pathvalue=$content["navdetails"]["path"];
+                        $pathvalue=$content["navzuordnung"]["path"];
                         $hide=""; 
+                    } 
+                    if($content["navzuordnung"]["auto_subcategories"]!="_blank" && $content["navzuordnung"]["auto_subcategories"]!="") { 
+                        $check_autosubcat=" checked";
+                        $hide_autosubcat=""; 
                     } 
                 }
             ?>
@@ -56,6 +60,25 @@
                     <label for="url">URL als Ziel festlegen</lable>
                     <input type="text" name="url" value="<?php if($modus!="new") { echo $pathvalue; } ?>" />
                 </div>
+                <p>&nbsp;</p>
+            </div>
+
+            <input type="checkbox" id="autonav" name="autosubcat" class="js_admin_opendrawer" value="1" data-drawer="autosubcat"<?php echo $check_autosubcat; ?> />
+            <label for="meta_autoonline" class="linelabel">
+                Automatische Unterpunkte generieren
+            </label>
+            <div class="drawer js_admin_opendrawer_autosubcat <?php echo $hide_autosubcat; ?>">
+                <div>
+                    <label for="url">Wähle ein Modul, dass Automatische Untermenüpunkte unterstützt</lable>
+                    <select name="autosubcat_value">
+                    <?php    
+                    foreach($content["autosubcat"] as $autosubcat) {
+                        if($content['navzuordnung']['auto_subcategories']==$autosubcat['auto_navcategory']) { $autosubcatcheck=" selected"; } else { $autosubcatcheck=""; }
+                        echo '<option value="'.$autosubcat["auto_navcategory"].'"'.$autosubcatcheck.'>'.$autosubcat["modulname"].'</option>';
+                    }
+                    ?>
+                    </select>
+                </div>
             </div>
         </p>
     </div>
@@ -67,7 +90,7 @@
         $radio_hide_sub=" admin_hide";
 
         if($modus!="new") {
-            if($content["navdetails"]["subcategory"]!=0) {
+            if($content["navzuordnung"]["subcategory"]!=0) {
                 $radiocheck="";
                 $radiocheck_sub=" checked";
                 $radio_hide=" admin_hide";
@@ -88,7 +111,7 @@
                   	<option value="notarget">--- Gruppe wählen ---</option>
                     <?php   
                         foreach($content["navgroups"] as $navgroup) {
-                            if($content["navdetails"]["nav_group"]==$navgroup['name']) { $groupcheck=" selected"; } else { $groupcheck=""; }
+                            if($content["navzuordnung"]["nav_group"]==$navgroup['name']) { $groupcheck=" selected"; } else { $groupcheck=""; }
                             echo'<option value="'.$navgroup['name'].'"'.$groupcheck.'>'.$navgroup['name'].'</option>';
                         }
                     ?>
@@ -104,7 +127,7 @@
                     <option value="0">--- Menüpunkt wählen ---</option>
                     <?php   
                         $level=1;
-                        foreach($content["structure"] as $structure) {
+                       foreach($content["structure"] as $structure) {
                             if($level!=$structure['level']) {
                                 $level = $structure['level'];
                                 if($structure['level']>1) {    
@@ -119,7 +142,7 @@
                             }
                             $check="";
                             if($modus!="new") {
-                                if($content["navdetails"]["subcategory"]==$structure['navID']) { $check=" selected"; } else { $check=""; }
+                                if($content["navzuordnung"]["subcategory"]==$structure['navID']) { $check=" selected"; } else { $check=""; }
                             }
                             echo'<option value="'.$structure['navID'].'"'.$check.'>'.$levelsign.$structure['label'].'</option>';
                         }
@@ -136,43 +159,61 @@
             <h3 class"admin">Wherzuordnung</h3>
             <ul>
             <?php
-            
-            $i=1;
-            if($modus!="new") {
-                foreach($content["navzuordnung"] as $zuordnung) {
-                    if($zuordnung["wehrID"]==0) {  
-                        $check=" checked"; 
-                        break;
-                    } else {
-                        $check="";
-                    } 
-                }
-            }   
-            
-            echo'<li>
-            <input type="checkbox" name="wehren[0]" id="wehren[0]" value="0"'.$check.'> 
-            <label class="admin_tablabel" for="wehren[0]">Alle Wehren</label>
-            </li>';
-
-            foreach($content["wehren"] as $wehr) {
                 if($modus!="new") {
-                    foreach($content["navzuordnung"] as $zuordnung) {
-                        if($zuordnung["wehrID"]==$wehr["wehrID"]) {  
+                    if($content["navzuordnung"]["wehrID"]==0) {
+                        echo '<li>Alle Wehren</li>';
+                    } else {
+                        echo '<li>'.$content["wehren"][$content["navzuordnung"]["wehrID"]]['wehr_name'].'</li>';
+                    }
+                    echo '<input type="hidden" name="wehren[0]" id="wehren[0]" value="'.$content["navzuordnung"]["wehrID"].'">';
+                } else {       
+                    $i=1;
+                    if($modus!="new") {
+                        foreach($content["navzuordnung"] as $zuordnung) {
+                            if($zuordnung["wehrID"]==0) {  
+                                $check=" checked"; 
+                                break;
+                            } else {
+                                $check="";
+                            } 
+                        }
+                    } else {
+                        if($_GET['wehrID']==0) {
                             $check=" checked"; 
-                            break;
                         } else {
                             $check="";
                         }
+                    }   
+                    
+                    echo'<li>
+                    <input type="checkbox" name="wehren[0]" id="wehren[0]" value="0"'.$check.'> 
+                    <label class="admin_tablabel" for="wehren[0]">Alle Wehren</label>
+                    </li>';
+
+                    foreach($content["wehren"] as $wehr) {
+                        if($modus!="new") {
+                            foreach($content["navzuordnung"] as $zuordnung) {
+                                if($zuordnung["wehrID"]==$wehr["wehrID"]) {  
+                                    $check=" checked"; 
+                                    break;
+                                } else {
+                                    $check="";
+                                }
+                            }
+                        } else {
+                            if($_GET['wehrID']==$wehr["wehrID"]) {
+                                $check=" checked";
+                            } else {
+                                $check="";
+                            }
+                        }             
+                        echo'<li>
+                        <input type="checkbox" name="wehren['.$i.']" id="wehren['.$i.']" value="'.$wehr['wehrID'].'"'.$check.'> 
+                        <label class="admin_tablabel" for="wehren['.$i.']">'.$wehr['wehr_name'].'</label>
+                        </li>';
+                        $i++;
                     }
-                } else {
-                    $check="";
-                }             
-                echo'<li>
-                <input type="checkbox" name="wehren['.$i.']" id="wehren['.$i.']" value="'.$wehr['wehrID'].'"'.$check.'> 
-                <label class="admin_tablabel" for="wehren['.$i.']">'.$wehr['wehr_name'].'</label>
-                </li>';
-                $i++;
-            }
+                }
             ?>
             </ul>
         </div>

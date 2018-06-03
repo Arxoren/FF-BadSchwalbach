@@ -170,7 +170,7 @@ class model_pagebuilder extends CI_Model {
 
 		//$sqlstr = 'SELECT * FROM ffwbs_navigation WHERE nav_group="'.$navgroup.'" AND language="'.$GLOBALS['language'].'" AND online="1" AND subcategory="0" ORDER BY sort ASC';
 
-		$sqlstr = 'SELECT m.* FROM ffwbs_navigation m INNER JOIN ffwbs_navigation_zuordnung z ON m.navID=z.navID AND z.wehrID="'.$navWehrID.'" WHERE m.nav_group="'.$navgroup.'" AND m.language="'.$GLOBALS['language'].'" AND m.online="1" AND m.subcategory="0" ORDER BY sort ASC';
+		$sqlstr = 'SELECT * FROM ffwbs_navigation_zuordnung WHERE wehrID="'.$navWehrID.'" AND nav_group="'.$navgroup.'" AND language="'.$GLOBALS['language'].'" AND online="1" AND subcategory="0" ORDER BY sort ASC';
 		$query = $this->db->query($sqlstr);
 		$menue = $query->result_array();
 
@@ -227,7 +227,7 @@ class model_pagebuilder extends CI_Model {
 			}
 
 			//$sqlstr = 'SELECT * FROM ffwbs_navigation WHERE language="'.$GLOBALS['language'].'" AND online="1" AND subcategory="'.$items[$i]['navID'].'"';
-			$sqlstr = 'SELECT m.* FROM ffwbs_navigation m INNER JOIN ffwbs_navigation_zuordnung z ON m.navID=z.navID AND z.wehrID="'.$navWehrID.'" WHERE m.language="'.$GLOBALS['language'].'" AND m.online="1" AND m.subcategory="'.$items[$i]['navID'].'" ORDER BY sort ASC';
+			$sqlstr = 'SELECT * FROM ffwbs_navigation_zuordnung WHERE wehrID="'.$navWehrID.'" AND language="'.$GLOBALS['language'].'" AND online="1" AND subcategory="'.$items[$i]['navID'].'" ORDER BY sort ASC';
 			$query = $this->db->query($sqlstr);
 			$menue = $query->result_array();
 

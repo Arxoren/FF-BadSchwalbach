@@ -670,6 +670,32 @@
 		e.preventDefault();
 
 		var box = $(this).attr('data-box');
+		var headtxt = $(this).attr('data-headtxt');
+		var func = $(this).attr('data-func');
+		var link = $(this).attr('href');
+
+		$('#js_admin_dialog_'+box).removeClass('admin_hide');
+		$('#js_admin_dialog_opt1').attr('href', link);
+		$('#js_admin_dialogbox_headline').text(headtxt);
+	});
+
+	$(document).on("click", ".admin_closedialogbox", function(e) {
+		e.preventDefault();
+		$(this).parent().parent().addClass('admin_hide');
+	});
+	$(document).on("click", ".js_admin_closedialogbox", function(e) {
+		e.preventDefault();
+		$(this).parent().parent().addClass('admin_hide');
+	});
+
+	/*--------------------------------------------------------------*/
+	//  DELETE DIALOG >> SPECIAL <<
+	/*--------------------------------------------------------------*/
+
+	$(document).on("click", ".js_admin_dialogbox_special", function(e) {
+		e.preventDefault();
+
+		var box = $(this).attr('data-box');
 		var func = $(this).attr('data-func');
 		var link = $(this).attr('href');
 

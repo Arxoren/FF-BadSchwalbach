@@ -2,10 +2,10 @@
 
 </body>
 
-	<!--
 	<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
 	<script type="text/javascript">
 	    var gaProperty = 'UA-1899094-4';
+    	ga('set', 'anonymizeIp', true);
 	    var disableStr = 'ga-disable-' + gaProperty;
 	    if (document.cookie.indexOf(disableStr + '=true') > -1) {
 	        window[disableStr] = true;
@@ -19,6 +19,5 @@
 		_uacct = "UA-1899094-4";
 		urchinTracker();
 	</script>
-	-->
 
 </html>
