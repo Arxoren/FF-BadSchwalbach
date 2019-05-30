@@ -182,7 +182,7 @@ class model_media extends CI_Model {
 				}
 				*/
 				//--- Dateigröße begrenzen
-				if ($_FILES["media_file"]["size"][$i] > 500000) {
+				if ($_FILES["media_file"]["size"][$i] > 2000000) {
 				    $msg = 'error:Sorry, Das Bild "'.$_FILES["media_file"]["name"][$i].'" ist zu groß.';
 				    $uploadOk = 0;
 				}
@@ -372,12 +372,14 @@ class model_media extends CI_Model {
 		$level = $path.'/';
 		$x=0;
 
+		/*
 		for($i=0; $i<count($filemap); $i++) {
 			if(is_dir("./frontend/".$mediatype."_cms/".$path."/".$filemap[$i])) {	
 				$var[$path][$x] = str_replace('/', '', str_replace('\\', '', $filemap[$i]));
 				$folder_list = $this->media_get_scandir($mediatype, $var[$path][$x], $level, $folder_list);
 			}
 		}
+		*/
 
 		// --- Ordner liste abrufen
 		return  $folder_list;

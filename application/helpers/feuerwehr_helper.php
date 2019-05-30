@@ -46,18 +46,14 @@
 		
 		return $var; 
 	}	
-	function basicffw_get_vereindetails_singlevar($vereinID, $index) {
+	function basicffw_get_vereindetails_singlevar($vereinID, $var) {
 		$CI =& get_instance();
 		
-		if($vereinID!=0) {
-			$query_string = 'SELECT * FROM ffwbs_wehren WHERE wehrID="'.$vereinID.'" LIMIT 1';
-			$query = $CI->db->query($query_string);	
-			$verein = $query->row_array();
-			$var = $verein[$index];
-		} else {
-			$var = "Allgemein";
-		}
-		return $var; 
+		$query_string = 'SELECT * FROM ffwbs_wehren WHERE wehrID="'.$vereinID.'" LIMIT 1';
+		$query = $CI->db->query($query_string);	
+		$verein = $query->row_array();
+		
+		return $verein[$var]; 
 	}		
 	function basicffw_get_wehrlist() {
 		$CI =& get_instance();

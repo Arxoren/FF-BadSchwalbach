@@ -101,8 +101,9 @@ class pagebuilder extends CI_Controller {
 					
 					// Model laden und ausführen
 					$model = 'model_'.$data['actual_func']['model'];
+					$func = $data['actual_func']['function'];
 					$this->load->model('admin/'.$model);
-					$this->$model->$data['actual_func']['function']();
+					$this->$model->$func();
 
 					// target zuweisen und Meta-Daten neu laden
 					$_GET['op']=$_GET['target'];
@@ -123,8 +124,9 @@ class pagebuilder extends CI_Controller {
 				// Content laden
 				if($data['actual_func']['model']!="") {	
 					$model = 'model_'.$data['actual_func']['model'];
+					$func = $data['actual_func']['function'];
 					$this->load->model('admin/'.$model);
-					$data['content'] = $this->$model->$data['actual_func']['function']();
+					$data['content'] = $this->$model->$func();
 				}
 				
 				if($_GET['op']!="pages_edit" && $_GET['op']!="news_edit") {

@@ -52,10 +52,17 @@
             </div>
         </div>
     </div>
-    <div id="js_modalbg" class="mobileNav_close">
-        <a href="#" class="close-panel">X</a>
-    </div>
     <nav>
+        
+        <div class="nav-closebtn">
+            <?php
+                echo '<h1><a href="'.base_url().''.$GLOBALS['varpath'].'">Startseite</a></h1>';
+            ?>
+            <a href="#" class="close-panel">Close</a>
+            <hr class="clear" />
+        </div>
+
+
         <ul class="meta">
             <?php    
                 foreach($menue['meta'] as $menuitem) {
@@ -134,7 +141,9 @@
                             }
 
                             if($prev_level==1) {
-                                echo '<div class="flyout"><div class="container"><ul'.$class.'>';
+                                echo '<div class="flyout"><div class="container">
+                                <h2 class="m-back">'.$prev_label.'</h2>';
+                                echo '<ul'.$class.'>';
                                 $flyeropen = 1;
                             } elseif($prev_level>=2) {
                                 echo '</ul><ul'.$class.'>';
@@ -151,6 +160,7 @@
                     }
                         
                     $prev_level = $menuitem['level'];
+                    $prev_label = $menuitem['label'];
                 }
                 
                 // Geöffnete Elemente schließen

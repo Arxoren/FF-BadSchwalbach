@@ -73,7 +73,7 @@ $ch = curl_init();
 
         echo'</ul>
         <h2>Alarmierte Einsatzkräfte</h2>
-        <ul class="center">';
+        <ul>';
 
             foreach($einsatz['einsatzkraefte'] as $externe) {    
                 echo '<li>'.$externe.'</li>';

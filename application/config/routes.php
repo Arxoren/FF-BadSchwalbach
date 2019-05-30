@@ -19,7 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 | Please see the user guide for complete details:
 |
-|	http://codeigniter.com/user_guide/general/routing.html
+|	https://codeigniter.com/user_guide/general/routing.html
 |
 | -------------------------------------------------------------------------
 | RESERVED ROUTES
@@ -74,10 +74,11 @@ $route['admin/save_modulesettings'] = "admin/pagebuilder/save_module_settings";
 // Frontend STARTSEITE laden
 $route['(:any)/(:any)'] = "pagebuilder/index";
 
-require_once( BASEPATH .'database/DB.php');
+require_once( BASEPATH .'database\DB.php');
 $db =& DB();
 $query = $db->get( 'pages' );
 $result = $query->result();
+
 foreach( $result as $row )
 {
     
@@ -119,6 +120,4 @@ foreach( $result as $row )
 
     $route[$index_route] = $index_controller;
 }
-
-
 

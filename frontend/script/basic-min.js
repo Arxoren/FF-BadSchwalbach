@@ -122,8 +122,32 @@
 			$("nav").removeClass("openNav");
 			$("#js_modalbg").removeClass("show_menubg");
 			$("body").removeClass("modal-open");
+			$("#menu").removeClass('showflyout');
 		}
 	});
+
+	if($(window).width()<600) {
+
+		$('#menu li a').click(function() {
+			var check = $(this).parent().parent().attr('id');
+			var url = $(this).attr('href');
+			var check_nextm = $(this).next().children().find('.headline').length;
+
+			if(check=="menu") {
+				if(check_nextm!=0) {
+					$(this).parent().parent().addClass('showflyout');
+				} else {
+					window.location.href = url;
+				}
+			}
+
+		});
+
+		$('.m-back').click(function() {
+			var text = $(this).text();
+			$("#menu").removeClass('showflyout');
+		});
+	}
 
 //-------------------------------------------------------
 // metaFF Menue

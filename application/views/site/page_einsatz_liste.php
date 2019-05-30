@@ -62,11 +62,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <hr class="clear" />
 </div>
 <div class="row raster-4col datafacts"> 
-    <div class="col-2 bottomline">
+    <div class="col-2">
         <p class="label">Eins&auml;tze insgesamt</p>
         <p class="fact"><?php echo $einsatzliste['stats']['alle']; ?></p>
     </div>
-    <div class="col-2 bottomline">
+    <div class="col-2">
         <p class="label">&uuml;ber&ouml;rtliche Einsätze</p>
         <p class="fact"><?php echo $einsatzliste['stats']['ueberoertlich']; ?></p>
     </div>

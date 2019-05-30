@@ -22,33 +22,50 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </div>
 <div class="row raster-4col datafacts"> 
     <div class="col-1">
-        <img src="<?php echo base_url().'frontend/images/icons/icon_calendar.svg'; ?>" alt="Beginn des Einsatzes" />
-        <p class="label">Einsatzbeginn</p>
-        <p class="timefact red"><?php echo basic_get_ger_datetime($einsatz['date_start'], 'dateonly', 2); ?></p>
-        <p class="timefact time red"><?php echo basic_get_ger_datetime($einsatz['date_start'], 'time', 2); ?> Uhr</p>
+        <div class="fact-icon">    
+            <img src="<?php echo base_url().'frontend/images/icons/icon_calendar.svg'; ?>" alt="Beginn des Einsatzes" />
+        </div>
+        <div class="fact-text">
+            <p class="label">Einsatzbeginn</p>
+            <p class="timefact red"><?php echo basic_get_ger_datetime($einsatz['date_start'], 'dateonly', 2); ?></p>
+            <p class="timefact time red"><?php echo basic_get_ger_datetime($einsatz['date_start'], 'time', 2); ?> Uhr</p>
+        </div>
+        <hr class="clear"/>
     </div>
     <div class="col-1">
-        <img src="<?php echo base_url().'frontend/images/icons/icon_einsatzdauer.svg'; ?>" alt="Dauer des Einsatzes" />
-        <p class="label">Einsatzdauer</p>
-        <p class="timefact red"><?php echo $einsatz['dauer_h']; ?> h</p>
-        <p class="timefact time red"><?php echo $einsatz['dauer_m']; ?> Min</p>
+        <div class="fact-icon">
+            <img src="<?php echo base_url().'frontend/images/icons/icon_einsatzdauer.svg'; ?>" alt="Dauer des Einsatzes" />
+        </div>
+        <div class="fact-icon">
+            <p class="label">Einsatzdauer</p>
+            <p class="timefact red"><?php echo $einsatz['dauer_h']; ?> h</p>
+            <p class="timefact time red"><?php echo $einsatz['dauer_m']; ?> Min</p>
+        </div>
     </div>
     <div class="col-1">
-        <img src="<?php echo base_url().'frontend/images/icons/icon_fahrzeuge.svg'; ?>" alt="Eingesetzte Fahrzeuge" />
-        <p class="label">Fahrzeuge</p>
-        <p class="fact number red"><?php echo $einsatz['fahrzeuge_anzahl']; ?></p>
+        <div class="fact-icon">
+            <img src="<?php echo base_url().'frontend/images/icons/icon_fahrzeuge.svg'; ?>" alt="Eingesetzte Fahrzeuge" />
+        </div>
+        <div class="fact-text">
+            <p class="label">Fahrzeuge</p>
+            <p class="fact number red"><?php echo $einsatz['fahrzeuge_anzahl']; ?></p>
+        </div>
     </div>
     <div class="col-1">
-        <img src="<?php echo base_url().'frontend/images/icons/icon_helmmannschaft.svg'; ?>" alt="Eingesetzte eigene Kr&aum;fte" />
-        <p class="label">Eigene Kr&auml;fte</p>
-        <p class="fact number red"><?php echo $einsatz['eigenekraefte']; ?></p>
+        <div class="fact-icon">
+            <img src="<?php echo base_url().'frontend/images/icons/icon_helmmannschaft.svg'; ?>" alt="Eingesetzte eigene Kr&aum;fte" />
+        </div>
+        <div class="fact-text">
+            <p class="label">Eigene Kr&auml;fte</p>
+            <p class="fact number red"><?php echo $einsatz['eigenekraefte']; ?></p>
+        </div>
     </div>
     <hr class="clear" />
 </div>
 <div class="row raster-4col datafacts"> 
     <div class="col-4">
-        <p class="label wache">Arlamierte Wachen</p>
-        <p class="factlist wache"><?php echo $einsatz['alamiertewheren']; ?>
+        <p class="label wache">Alarmierte Wachen</p>
+        <p class="fact wache red"><?php echo $einsatz['alamiertewheren']; ?>
         </p>
     </div>
     <hr class="clear" />

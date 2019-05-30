@@ -22,7 +22,7 @@ class model_pagenavigation extends CI_Model {
 		$sqlstr = 'SELECT * FROM ffwbs_navigation_groups ORDER BY navigationgroupID ASC';
 		$query = $this->db->query($sqlstr);
 		$menue_array['navgroup'] = $query->result_array();
-		$menue_arrayitems = '';
+		$menue_arrayitems = array();
 
 		foreach($menue_array['navgroup'] as $group) {		
 		
@@ -97,7 +97,7 @@ class model_pagenavigation extends CI_Model {
 	public function pagenavigation_editor() {
 		
 		$var['akt_wehr'] = $_GET['wehrID'];
-		$var['structure'] = '';
+		$var['structure'] = array();
 
 		if($_GET['id']!="new") {
 			$sqlstr = 'SELECT * FROM ffwbs_navigation_zuordnung WHERE navID="'.$_GET['id'].'"';
@@ -165,11 +165,9 @@ class model_pagenavigation extends CI_Model {
 			if($_POST['editID']!="") {
 				// Alte Werte zum Vergleich ziehen
 				$query = $this->db->query('SELECT * FROM ffwbs_navigation_zuordnung WHERE navID="'.$_POST["editID"].'"');
-				echo 'SELECT * FROM ffwbs_navigation_zuordnung WHERE navID="'.$_POST["editID"].'"<br>';
 				$old = $query->row_array();
 				$sort = $old['sort'];
 				$nav_group = $old['nav_group'];
-				echo 'A: '.$sort.'<br>';
 				
 				// Sortierung nur ändern wenn sich die Subcategory ändert
 				if($_POST['submenue']=='navgroup') {
@@ -177,18 +175,15 @@ class model_pagenavigation extends CI_Model {
 						$query = $this->db->query('SELECT * FROM ffwbs_navigation_zuordnung WHERE wehrID="'.$wehrID.'" AND nav_group="'.$_POST["navgroup"].'" AND subcategory="'.$_POST['subcategory'].'"');
 						$sort = $query->num_rows();
 						$nav_group = $this->pagenavigation_getNavGroup($query);
-						echo "maincategory >>><br>";
 					} 
 				} elseif($_POST["submenue"]=='subcategory') {
 					if($_POST["subcategory"]!=$old['subcategory']) {
 						$query = $this->db->query('SELECT * FROM ffwbs_navigation_zuordnung WHERE wehrID="'.$wehrID.'" AND subcategory="'.$_POST['subcategory'].'"');
 						$sort = $query->num_rows();
 						$nav_group = $this->pagenavigation_getNavGroup($query);
-						echo "subcategory >>><br>";
 					}
 				}
 
-				echo 'B: '.$sort.'<br>';
 			} else {
 				if($_POST['submenue']=='navgroup') {	
 					$nav_group = $_POST["navgroup"];
@@ -213,20 +208,23 @@ class model_pagenavigation extends CI_Model {
 			   'online' => $_POST["online"]
 			);
 			
-			print_r($data_navigation);
-
 			if($_POST['editID']=="") {
 				$this->db->insert('navigation_zuordnung', $data_navigation);
 				$newest_navID = $this->db->insert_id();
 			} else {
 				$this->db->where('navID', $_POST["editID"]);
 				$this->db->update('navigation_zuordnung', $data_navigation);			
+				$this->pagenavigation_updateOldSort($old['nav_group'], $old['subcategory']);
 			}
 		}
 		
-		echo "SAVE!";
+		// LOG befüllen
+		// -----------------------------------------
+		$log_action = 'hat den Menuepunkt "'.$_POST["title"].' für die Wehr: '.$wehrID.'" bearbeitet.';
+		basic_writelog($log_action,'mapenavigation - item edit', 2);
 
-		//$GLOBALS['globalmessage'] = $msg;
+		$GLOBALS['globalmessage'] = "success:Änderungen wurden gespeichert";
+
 
 		$var = $this->pagenavigation_liste();
 		return $var;
@@ -236,6 +234,16 @@ class model_pagenavigation extends CI_Model {
 		$new = $query->row_array();
 		return $new["nav_group"]; 
 	}
+
+	public function pagenavigation_updateOldSort($navgroup, $subcategory) {
+		$query = $this->db->query('SELECT * FROM ffwbs_navigation_zuordnung WHERE subcategory="'.$subcategory.'" AND nav_group="'.$navgroup.'" ORDER BY sort ASC');
+		$old_sort = $query->result_array();
+
+		for($i=0; $i<count($old_sort); $i++) {	
+			$sql = $this->db->query('UPDATE ffwbs_navigation_zuordnung SET sort="'.$i.'" WHERE navID="'.$old_sort[$i]["navID"].'"');
+		}
+	}
+
 
 	/*
 	|--------------------------------------------------------------------------
@@ -353,7 +361,7 @@ class model_pagenavigation extends CI_Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Menüpunkte kopieren
+	| Menüpunkte für eine Wehr kopieren
 	|--------------------------------------------------------------------------
 	*/
 	public function copy() {
