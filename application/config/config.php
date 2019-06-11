@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/web_2018/';
+$config['base_url'] = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/_web/';
 //$config['base_url'] = 'http://ffwswa.dvkoch-hosting.de/';
 //$config['base_url'] = 'http://www.feuerwehr-badschwalbach.de/';
 

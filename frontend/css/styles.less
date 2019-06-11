@@ -629,7 +629,7 @@ nav .meta, nav .cityselect { display: none; }
 	
 	nav {
 		width: @nav_width;
-		position: absolute;
+		position: fixed;
 		left: -@nav_width;
 		top: 0;
 		display: block;
@@ -1020,7 +1020,8 @@ nav .showflyout {
 @media only screen and (max-width: 400px) {
 
 	#stage .big { background-position: 70% 30%; height: 300px; background-size: 300%; }	
-	#stage .standard { background-position: 80% 40%; background-size: 400%; }	
+	#stage .standard { background-position: 80% 40%; background-size: 400%; }
+	#stage .einsatz { background-position: 35% 50%; background-size: 300%; }	
 	#stage .fahrzeug { background-position: 50% 50%; background-size: 170%; }	
 	#stage {
 		h1 {
@@ -1744,8 +1745,7 @@ nav .showflyout {
 	width: 100%;
 	text-align: center;
 	padding: 30px 0 0 0;
-	margin: 30px 0;
-	
+	margin: 30px 0;	
 }
 
 @media only screen and (max-width: 780px) {
@@ -2075,7 +2075,6 @@ nav .showflyout {
 			background-repeat: no-repeat;
 			background-position: 98% 50%;
 			background-size: 15px;
-			min-height: 95px;
 		
 			.number {
 				float: left;
@@ -2090,8 +2089,8 @@ nav .showflyout {
 				margin: 7px 0 7px 15px;
 				padding: 4px 15px 4px 0;
 				border-right: 1px solid @color_grey_bg;
-				
-				p { padding: 0; margin: 0; }
+
+				p { padding: 0; margin: 0; font-size: 14px; line-height: normal; }
 				.date { font-weight: bold; }
 			}
 			.icon {
@@ -2177,9 +2176,10 @@ nav .showflyout {
 	.einsatzliste {
 		ul {
 			li {
+				min-height: 95px;
+
 				.number {
 					font-size: 14px;
-					margin: 11px 0 0 10px;	
 					padding: 0 5px;
 					border: 0;
 				}

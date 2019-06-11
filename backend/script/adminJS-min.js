@@ -5,8 +5,8 @@
 	var editor_selRange;	
 	
 	
-	var g_basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/web_2018/admin/'
-	var basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/web_2018/'
+	var g_basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/_web/admin/'
+	var basepath = 'http://localhost/laufendeProjekte/FF-BadSchwalbach/_web/'
 		
 	/*
 	var g_basepath = 'http://www.feuerwehr-badschwalbach.de/admin/'

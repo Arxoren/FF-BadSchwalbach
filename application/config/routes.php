@@ -74,7 +74,7 @@ $route['admin/save_modulesettings'] = "admin/pagebuilder/save_module_settings";
 // Frontend STARTSEITE laden
 $route['(:any)/(:any)'] = "pagebuilder/index";
 
-require_once( BASEPATH .'database\DB.php');
+require_once( BASEPATH .'database/DB.php');
 $db =& DB();
 $query = $db->get( 'pages' );
 $result = $query->result();
