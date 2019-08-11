@@ -94,11 +94,12 @@ class model_news extends CI_Model {
 	*/	
 	public function get_last_news() {
 		$ch = curl_init();
+		$n = ($this->uri->total_segments())-2;
 		
 		if($GLOBALS['location']=="all") {
-			$query = $this->db->query('SELECT * FROM ffwbs_news WHERE online="1" ORDER BY date DESC LIMIT 3');
+			$query = $this->db->query('SELECT * FROM ffwbs_news WHERE online="1" AND newsID!="'.$this->uri->rsegment($n).'" ORDER BY date DESC LIMIT 3');
 		} else {
-			$query = $this->db->query('SELECT * FROM ffwbs_news WHERE online="1" AND wehrID="'.$GLOBALS['location'].'" OR wehrID="0" ORDER BY date DESC LIMIT 3');
+			$query = $this->db->query('SELECT * FROM ffwbs_news WHERE online="1" AND newsID!="'.$this->uri->rsegment($n).'" AND wehrID="'.$GLOBALS['location'].'" OR wehrID="0" ORDER BY date DESC LIMIT 3');
 		}
 		$news_items = $query->result_array();
 

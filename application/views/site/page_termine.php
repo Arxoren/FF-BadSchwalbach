@@ -13,6 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     
   <?php
     $i=0;
+    $opensegment= $this->input->get('t', TRUE);
 
     if(count($termine)!=0) {
         foreach($termine as $termin) {
@@ -25,9 +26,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             $timeleiste = $timeleiste.' bis <span>'.$termin['zeit_bis'].' Uhr</span>';
           }
 
+          // check if one drawer will be oben initial
+          if($opensegment!="" && $opensegment==$termin['termineID']) {
+            $pre_open=" terminactive";
+            $pre_hide="";
+            $pre_link="Schließen";
+          } else {
+            $pre_open="";
+            $pre_hide=" hide";
+            $pre_link="Details";         
+          }
 
           echo'
-          <div class="termin">
+          <div class="termin'.$pre_open.'" id="termine-'.$termin['termineID'].'">
             <div class="date">
               <p class="day">'.$termin['tag'].'</p>
               <p>'.$termin['monat'].'</p>
@@ -36,8 +47,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div class="content">  
               <h2>'.$termin['headline'].'</h2>
               <h3>'.$termin['zeit_von'].' - '.$termin['feuerwehr'].'</h3>
-              <div class="js_termindetails_'.$i.' hide">
-                <p>'.$termin['text'].'</p>
+              <div class="js_termindetails_'.$i.''.$pre_hide.'">
+                <p>'.text_format_parsing($termin['text']).'</p>
                 <div class="box time">
                   <p>'.$zeitleiste.'</p>
                   <p>'.$timeleiste.'</p>
@@ -52,7 +63,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
               echo'  
               </div>
-              <p class="close"><a href="#" class="js_closetermin" terminno="'.$i.'">Details</a></p>
+              <p class="close"><a href="#" class="js_closetermin" terminno="'.$i.'">'.$pre_link.'</a></p>
             </div>
             <hr class="clear">
           </div>';
@@ -63,6 +74,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     }
 
   ?>
-        
+
+  <script type="text/javascript">$('html, body').animate({
+      scrollTop: ($('#termine-<?php echo $opensegment; ?>').offset().top)
+  },500);
+</script>
+
   </div>
 </div>

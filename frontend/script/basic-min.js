@@ -41,9 +41,7 @@
 			$('.js_'+slsh).find('.actualImg').html(1);
 			$('.js_'+slsh).find('.allImages').html(itemcount);
 		});
-
 	});
-
 
 //-------------------------------------------------------
 //  Diverses

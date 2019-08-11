@@ -98,8 +98,10 @@
                             foreach($appointments as $termin_items) {
                                         
                                 echo'<li>
+                                <a href="http://localhost/laufendeProjekte/FF-BadSchwalbach/_web/de/allewehren/aktuelles/termine/?t='.$termin_items['termineID'].'">
                                 <h3 class="date">'.$termin_items['date_anfang'].'</h3>
                                 <h3>'.$termin_items['headline'].'</h3>
+                                </a>
                                 </li>';
                                         
                             }
