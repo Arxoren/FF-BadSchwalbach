@@ -1,6 +1,23 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 
+<?php
+
+if($GLOBALS['location']==0) {
+  echo '<div id="anchorbar" class="anchorbarstyle">
+        <span id="js_open_anchorbar" class="anchorbar_mobile-opener">Standorte anzeigen</span>
+  <ul class="js-anchor-list">';
+        echo'<li>Standorte:</li>';
+    $wehrlist = basicffw_get_wehrlist();      
+    foreach($wehrlist as $wehr) {
+       echo'<li><a href="#'.$wehr["wehrID"].'">'.$wehr["ort"].'</a></li>';
+    }
+  echo'</ul></div>
+  <div id="anchorbar_placeholder" class="hide"></div>';
+}
+
+?>
+
 <div class="row"> 
   <div class="col-4 liste mannschaft">
               
@@ -13,26 +30,41 @@
     if(count($einsatzabteilung)!=0) {    
       foreach ($einsatzabteilung as $member) {
       
-        if($member["wehrID"]!=$wehrHeadline) {
-          
-          if($wehrHeadline!="") { echo '</ul>'; }
+        if($member["position"]<5) {
+          if($member["wehrID"]!=$wehrHeadline) {
+              
+              if($wehrHeadline!="") { echo '</ul>'; }
 
-          $wehrdetails = basicffw_get_vereindetails($member["wehrID"]); 
-          $wehrHeadline = $member["wehrID"];
-          echo'
-            <h2 class="headline_left '.$trennerclass.'">Standort</h2>
-            <h1 class="headline_left">'.$wehrdetails['ort'].'</h1>
-            <ul>';
-          $trennerclass='withline';
-          $team=0;
-
+              $wehrdetails = basicffw_get_vereindetails($member["wehrID"]); 
+              $wehrHeadline = $member["wehrID"];
+              echo'
+                <h2 class="headline_left '.$trennerclass.'" id="'.$member["wehrID"].'">Standort</h2>
+                <h1 class="headline_left">'.$wehrdetails['ort'].'</h1>
+                <ul>';
+              $trennerclass='withline';
+              $team=0;
+          }
+        } else {
+          if($wehrHeadline=="") {
+            $wehrdetails = basicffw_get_vereindetails($member["wehrID"]); 
+            $wehrHeadline = "leads";
+            echo'
+              <h2 class="headline_left '.$trennerclass.'">Leitung</h2>
+              <h1 class="headline_left">Statdbrandinspektoren</h1>
+              <ul>';
+            $trennerclass='withline';
+              $team=0;
+          }
         }
 
-        if($member["position"]==0 && $team==0) {
-          echo'</ul><ul>';
+        if($member["position"]<5 && $team==0) {
+          echo'</ul><h3>Wehr- und Einsatzleitung</h3><ul>';
           $team=1;
         }
-
+        if($member["position"]==0 && $team==1) {
+          echo'</ul><h3>Mannschaft</h3><ul>';
+          $team=2;
+        }
 
         $rang = basicffw_get_rang($member["rang"], $member["geschlecht"]);
 

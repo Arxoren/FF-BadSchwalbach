@@ -106,8 +106,8 @@ class model_team extends CI_Model {
 					$images = "";
 
 					$filename =  explode(".", $_FILES["media_file"]["name"][$i]);
-					$imagename = $filename[0];
-					$imageDB = $_FILES["media_file"]["name"][$i];
+					$imagename = "team_".$filename[0].$newest_memberID;
+					$imageDB = "team_".$filename[0].$newest_memberID.".".$filename[1];;
 
 				    // Media Fuktion laden zum Bilder speichern
 				    $file_msg = $CI->Model_media->write_image($i, $imagename);
@@ -156,8 +156,8 @@ class model_team extends CI_Model {
 				for($i=0; $i<count($_FILES["media_file"]["tmp_name"]); $i++) {
 					if($_FILES["media_file"]["tmp_name"][$i]!="") {
 					    $filename =  explode(".", $_FILES["media_file"]["name"][$i]);
-					    $imagename = $filename[0];
-					    $imageDB = $_FILES["media_file"]["name"][$i];
+					    $imagename = "team_".$filename[0].$_POST["editID"];
+					    $imageDB = "team_".$filename[0].$_POST["editID"].".".$filename[1];
 						   		
 				   		// Media Fuktion laden zum Bilder speichern
 					    $file_msg = $CI->Model_media->write_image($i, $imagename);

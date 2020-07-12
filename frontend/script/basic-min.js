@@ -84,6 +84,14 @@
 			change_anchor = akt_anchor;
 		}
 
+		var y = $(this).scrollTop();
+		if (y >= top) {
+			$('#anchorbar').addClass('fixedbar');
+			$('#anchorbar_placeholder').removeClass('hide');
+		} else {
+			$('#anchorbar').removeClass('fixedbar');
+			$('#anchorbar_placeholder').addClass('hide');
+		}
 	
 	});
 	
@@ -379,5 +387,15 @@
 		}	
 	}
 
+	$("#js_open_anchorbar").click(function(){
+		$('.js-anchor-list').css('display', 'block');
+		$(this).css('display', 'none');
+	});
+	$(".js-anchor-list").click(function(){
+		if($( document ).width()<600) {
+			$("#js_open_anchorbar").css('display', 'block');
+			$(this).css('display', 'none');
+		}
+	});
 
 })(jQuery);

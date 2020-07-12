@@ -87,6 +87,7 @@
                 <?php } ?>
                 
                 <?php
+                    /*
                 if($appointments!="NO_TERMIN") {
                     
                     echo'
@@ -111,6 +112,7 @@
                         </div>
                     </div>';
                 } 
+                    */
                 ?>
 
                 

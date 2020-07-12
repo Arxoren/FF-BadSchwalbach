@@ -58,7 +58,7 @@
     </div>
     <div class="edit_form formline">
         <p>
-            <label for="wehrID">Feuerwehr</lable>
+            <label for="wehrID">Feuerwehr (Homebase)</lable>
             <select name="wehrID">
                 <option value="novalue">- Bitte wählen -</option>
                 <?php
@@ -68,6 +68,17 @@
                 }
                 ?>
             </select>
+        </p>
+        <p>
+            <label for="wehrID">Optionale Wehren</lable>
+            <br/><br/>
+            <?php
+                foreach($content['feuerwehren'] as $optionWehr) {    
+                    //if($optionWehr['wehrID']==$content['member']['wehrID']) { $check = " checked"; } else { $check = ""; }
+                    echo '<input type="checkbox" name="'.$optionWehr['wehrID'].'" value="1"'.$check.'> '.$optionWehr['ort'].'<br/>';
+                }
+            ?>
+            <br/>
         </p>
         <p>
             <label for="rang">Rang</lable>

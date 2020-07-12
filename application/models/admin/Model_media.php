@@ -225,7 +225,7 @@ class model_media extends CI_Model {
 				//echo 'Path: '.$filedir.$imagename.'<br>TEMP: '.$_FILES["media_file"]["tmp_name"][$i].'<br>'.$_POST["media_type"].'<br>';
 
 				if (!move_uploaded_file($_FILES["media_file"]["tmp_name"][$i], $filedir.$imagename)) {
-				    $msg = 'error:Sorry, das Bild "'.$_FILES["media_file"]["name"][$i].'" konnte nicht geschrieben werden';
+				    $msg = 'error:Sorry, das Bild "'.$_FILES["media_file"]["name"][$i].'" konnte nicht gespeichert werden';
 				} else {
 
 					if(isset($_POST["alt_text"])) {
